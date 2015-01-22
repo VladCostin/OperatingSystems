@@ -194,7 +194,7 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
 	 */
 	public void addBookIfIdDoesNotExist() {
 		
-		  book = MainActivity.database.getBook(AttributesBook.TITLE, fileName);
+		  book = MainActivity.m_database.getBook(AttributesBook.TITLE, fileName);
 		  if(book != null){
 			  Log.i("message", "exista deja");
 			  return;
@@ -202,9 +202,9 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
 		  
 		  Log.i("message", "nu exista deja");
 		  book = new Book(fileName, 0, NUM_PAGES, stringFilePath);
-		  MainActivity.database.addBook(book);
+		  MainActivity.m_database.addBook(book);
 		  
-		  book.setId(MainActivity.database.getBookId(book.getTitle()));
+		  book.setId(MainActivity.m_database.getBookId(book.getTitle()));
 	}
 
 

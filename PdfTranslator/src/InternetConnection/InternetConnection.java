@@ -104,16 +104,16 @@ public class InternetConnection extends AsyncTask<String, Void, Word> {
 		
 		 Integer iWord, iBook;
 		 
-		 iWord = MainActivity.database.getWordId(word.getValue());
+		 iWord = MainActivity.m_database.getWordId(word.getValue());
 		 if(iWord == null)
 		 {
-			 MainActivity.database.addWord(word);
-			 iWord = MainActivity.database.getWordId(word.getValue());
+			 MainActivity.m_database.addWord(word);
+			 iWord = MainActivity.m_database.getWordId(word.getValue());
 		 }
 		 
 		 
 		
-		 MainActivity.database.addAppeareance(
+		 MainActivity.m_database.addAppeareance(
 				 new Appeareance(ActivityTextDisplayer.getBook().getId(), iWord,  ActivityTextDisplayer.getSliderJumpToPage().getProgress()));
 		
 	}

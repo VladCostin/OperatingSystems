@@ -181,7 +181,7 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 		ArrayList<Word> wordsAdjective = new ArrayList<Word>();
 		ArrayList<Word> wordsAdverb = new ArrayList<Word>();
 		
-		List<Word> words = MainActivity.database.getAllWords(); 
+		List<Word> words = MainActivity.m_database.getAllWords(); 
 		Collections.sort(words, new Comparator(){
 
 			@Override

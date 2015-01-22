@@ -13,6 +13,9 @@ import com.example.pdftranslator.dictionary.ConstantsTabs;
 
 
 
+
+import com.example.pdftranslator.exercise.Exercise;
+
 import Database.Book;
 import Database.DatabaseHandler;
 import Database.PartSpeech;
@@ -48,31 +51,36 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 	/**
 	 * the button used for browsing for a pdf file
 	 */
-	Button buttonSelectPdf;
+	Button m_buttonSelectPdf;
 	
 	
 	/**
 	 * the button which shows the opened pdfs
 	 */
-	Button buttonShowStartedPdf;
+	Button m_buttonShowStartedPdf;
 	
 	/**
 	 * the button to show dictionary
 	 */
-	Button buttonShowDictionary;
+	Button m_buttonShowDictionary;
+	
+	/**
+	 * the button to enter the activity where the user can exercise the vocabulary
+	 */
+	Button m_buttonShowExerciseActivity;
 	
 	
 	
 	/**
 	 *  represents the path to the file to be read
 	 */
-	String	pathFileToBeShown;
+	String	m_pathFileToBeShown;
 	
 	
 	/**
 	 * code to identify the ActivityTextDisplayer from which the page and the title will be received
 	 */
-	int codeReaderPass= 1234;
+	int m_codeReaderPass= 1234;
 	
 	
 	/**
@@ -90,19 +98,19 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 	/**
 	 * 
 	 */
-	String nameSharedPreferences = "SharedPreferences";
+	String m_nameSharedPreferences = "SharedPreferences";
 	
 	
 	/**
 	 * contains the data saved such as the dictionary, info about the books, etc
 	 */
-	public static DatabaseHandler database;
+	public static DatabaseHandler m_database;
 	
 	
 	/**
 	 * the ListView used to open a started book at a specified page 
 	 */
-	ListView viewOpenPdf;
+	ListView m_viewOpenPdf;
 	
 	
 	
@@ -116,21 +124,26 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 		Core core = new Core();
 			
 		
-		buttonSelectPdf = (Button) findViewById(R.id.buttonChoosePdfFile);
-		buttonSelectPdf.setOnClickListener(this);
+		m_buttonSelectPdf = (Button) findViewById(R.id.buttonChoosePdfFile);
+		m_buttonSelectPdf.setOnClickListener(this);
 		
 		
-		buttonShowStartedPdf = (Button) findViewById(R.id.buttonOpenLastPdfFile);
-		buttonShowStartedPdf.setOnClickListener(this);
+		m_buttonShowStartedPdf = (Button) findViewById(R.id.buttonOpenLastPdfFile);
+		m_buttonShowStartedPdf.setOnClickListener(this);
 		
-		buttonShowDictionary = (Button) findViewById(R.id.buttonOpenDictionary);
-		buttonShowDictionary.setOnClickListener(this);
+		m_buttonShowDictionary = (Button) findViewById(R.id.buttonOpenDictionary);
+		m_buttonShowDictionary.setOnClickListener(this);
 		
-		pathFileToBeShown = null; // in case no file has been selected
+		
+		m_buttonShowExerciseActivity = (Button) findViewById(R.id.buttonExerciseDictionary);
+		m_buttonShowExerciseActivity.setOnClickListener(this);
+		
+		
+		m_pathFileToBeShown = null; // in case no file has been selected
 		
 		//this.getSharedPreferences(nameSharedPreferences, MODE_PRIVATE).edit().putStringSet(keySPGetPdgAndPage,  null).commit();
 		
-		database = new DatabaseHandler(this);
+		m_database = new DatabaseHandler(this);
 		//database.onUpgrade(database.getWritableDatabase(), 1, 2);
 
 		//database.deleteAllWords();
@@ -141,28 +154,28 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
 	public void addDataDatabase() {
 		
-		database.addWord(new Word("verb1", "vvaloare1", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.VERB.toString()));
-		database.addWord(new Word("verb2", "vvaloare1", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.VERB.toString()));
-		database.addWord(new Word("verb3", "vvaloare1", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.VERB.toString()));
-		database.addWord(new Word("verb4", "vvaloare1", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.VERB.toString()));
+		m_database.addWord(new Word("verb1", "vvaloare1", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.VERB.toString()));
+		m_database.addWord(new Word("verb2", "vvaloare1", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.VERB.toString()));
+		m_database.addWord(new Word("verb3", "vvaloare1", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.VERB.toString()));
+		m_database.addWord(new Word("verb4", "vvaloare1", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.VERB.toString()));
 		
 		
 		
-		database.addWord(new Word("noun1", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.NOUN.toString()));
-		database.addWord(new Word("noun2", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.NOUN.toString()));
-		database.addWord(new Word("noun3", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.NOUN.toString()));
-		database.addWord(new Word("noun4", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.NOUN.toString()));
+		m_database.addWord(new Word("noun1", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.NOUN.toString()));
+		m_database.addWord(new Word("noun2", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.NOUN.toString()));
+		m_database.addWord(new Word("noun3", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.NOUN.toString()));
+		m_database.addWord(new Word("noun4", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.NOUN.toString()));
 		
 		
-		database.addWord(new Word("adjective1", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADJECTIVE.toString()));
-		database.addWord(new Word("adjectivef", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADJECTIVE.toString()));
-		database.addWord(new Word("adjective3", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADJECTIVE.toString()));
-		database.addWord(new Word("adjective4", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADJECTIVE.toString()));
+		m_database.addWord(new Word("adjective1", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADJECTIVE.toString()));
+		m_database.addWord(new Word("adjectivef", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADJECTIVE.toString()));
+		m_database.addWord(new Word("adjective3", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADJECTIVE.toString()));
+		m_database.addWord(new Word("adjective4", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADJECTIVE.toString()));
 		
-		database.addWord(new Word("adverb1", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADVERB.toString()));
-		database.addWord(new Word("adverb2", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADVERB.toString()));
-		database.addWord(new Word("adverb3", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADVERB.toString()));
-		database.addWord(new Word("adverb4", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADVERB.toString()));
+		m_database.addWord(new Word("adverb1", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADVERB.toString()));
+		m_database.addWord(new Word("adverb2", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADVERB.toString()));
+		m_database.addWord(new Word("adverb3", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADVERB.toString()));
+		m_database.addWord(new Word("adverb4", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADVERB.toString()));
 		
 		
 	/*	database.addAppeareance(new Appeareance(1, 1, 1));
@@ -200,22 +213,28 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
 	
 
-		if( ( ( Button) v) == buttonSelectPdf )
+		if( ( ( Button) v) == m_buttonSelectPdf )
 		{ 
 				Intent intent = new Intent(this, FileBrowser.class);
 				startActivity(intent);
 				
 		}
 			
-		if( ( (Button) v ) == buttonShowStartedPdf)
+		if( ( (Button) v ) == m_buttonShowStartedPdf)
 		{	
 				Log.i("message", "cacat");
 				openedPdfFiles().show();
 		}
 		
-		if( ( (Button) v) == buttonShowDictionary )
+		if( ( (Button) v) == m_buttonShowDictionary )
 		{
 			showDialogDictionary().show();
+		}
+		
+		if(  ((Button) v) == m_buttonShowExerciseActivity )
+		{
+			Intent intent = new Intent(this, Exercise.class);
+			startActivity(intent);
 		}
 		
 		
@@ -226,7 +245,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 		
 		final CustomDialog customDialog = new CustomDialog(this, R.color.orange);
 		LayoutInflater inflater = this.getLayoutInflater();
-		final List<Book> books = database.getAllBooks();
+		final List<Book> books = m_database.getAllBooks();
 		final List<String> titles = new ArrayList<String>();
 	//	View body = inflater.inflate(R.layout.dialog_select_book_dictionary, null);
 		View body = inflater.inflate(R.layout.dialog_select_book_dictionary_list, null);
@@ -315,9 +334,9 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 		customDialog.setView(body);
 
 		adapter = new ArrayAdapter<>(this, R.layout.spinner_layout_text_center, titles);
-		viewOpenPdf = (ListView) body.findViewById(R.id.listviewDialogOpenStartedBooks); 		
-		viewOpenPdf.setAdapter(adapter);
-		viewOpenPdf.setOnItemClickListener(this);
+		m_viewOpenPdf = (ListView) body.findViewById(R.id.listviewDialogOpenStartedBooks); 		
+		m_viewOpenPdf.setAdapter(adapter);
+		m_viewOpenPdf.setOnItemClickListener(this);
 		
 		
 		customDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getResources().getString
@@ -341,7 +360,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 	{
 		SharedPreferences prefs;
 		Set<String> openedPdf;
-		prefs = getSharedPreferences(this.nameSharedPreferences, Context.MODE_PRIVATE);
+		prefs = getSharedPreferences(this.m_nameSharedPreferences, Context.MODE_PRIVATE);
 		openedPdf = prefs.getStringSet(keySPGetPdgAndPage, new HashSet<String>());
 		return openedPdf;
 	}
@@ -353,10 +372,10 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 	public void startIntent(String fileName, int page)
 	{
 		Intent intent = new Intent(this, ActivityTextDisplayer.class);
-		intent.putExtra(Constants.nameExtraStarttextDisplayer, pathFileToBeShown);
+		intent.putExtra(Constants.nameExtraStarttextDisplayer, m_pathFileToBeShown);
 		intent.putExtra(Constants.pageSaved, page);
 		intent.putExtra(Constants.nameFile, fileName);
-		startActivityForResult(intent, codeReaderPass);
+		startActivityForResult(intent, m_codeReaderPass);
 	}
 	
 	
@@ -398,7 +417,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 			return;
 		
 		prefs = this.getSharedPreferences
-		(this.nameSharedPreferences, Context.MODE_PRIVATE);
+		(this.m_nameSharedPreferences, Context.MODE_PRIVATE);
 		
 	    booksStarted = prefs.getStringSet(keySPGetPdgAndPage, new HashSet<String>());
 		
@@ -441,7 +460,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 		
 		Set<String> openedPdf;
 		String title, bookTitleSharedPreferences;
-		final List<Book> books = database.getAllBooks();
+		final List<Book> books = m_database.getAllBooks();
 		int i=0, page;
 		
 		openedPdf = this.getSetDataBookSharedPreferences();
@@ -463,7 +482,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 			if(bookTitleSharedPreferences.equals(title))
 			{
 				
-				pathFileToBeShown = Environment.getExternalStorageDirectory().toString() +"/"+bookTitleSharedPreferences;
+				m_pathFileToBeShown = Environment.getExternalStorageDirectory().toString() +"/"+bookTitleSharedPreferences;
 				startIntent(books.get(i).getTitle(), page );
 				break;
 			}
