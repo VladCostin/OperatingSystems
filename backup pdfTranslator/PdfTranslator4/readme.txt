@@ -1,0 +1,1 @@
+before making the slider and without correcting the string shown( to be displayed until the limit)

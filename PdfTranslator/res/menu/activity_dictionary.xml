@@ -1,0 +1,36 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.pdftranslator.dictionary.ActivityDictionary" >
+
+    
+
+     <item android:id="@+id/itemSearchWord"
+     	android:showAsAction="withText"
+     	android:title="@string/settingsSearchWord"/>
+     <item android:id="@+id/itemSelectBook"
+         android:title="@string/settingsSelectBook"
+         android:showAsAction="withText"
+     />
+    
+     <item
+         android:id="@+id/itemGotoNumber"
+         android:title="@string/settingsDecidePages"
+         android:actionLayout="@layout/item_actionbar_goto"
+      	 android:showAsAction="always"
+     />
+     
+    <item
+        android:id="@+id/buttonNextTen"
+        android:title="@string/title_next_pages"
+        android:showAsAction="ifRoom"
+    />
+    
+    <item
+        android:id="@+id/buttonBeforeTen"
+        android:title="@string/title_previous_pages"
+        android:showAsAction="ifRoom"
+    />
+    
+    
+
+</menu>

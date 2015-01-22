@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">PdfTranslator</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="buttonMenuBrowsePdf">Browse Sistem </string>
+    <string name="buttonMenuReadCurrentFile">Continue with current file</string>
+    <string name="buttonChoosePdfFile">Choose an EBook</string>
+    <string name="buttonBackBrowser">Back</string>
+    <string name="buttonCancelBrowser">Cancel</string>
+    <string name="dialogBrowserTitle">Choose a file</string>
+    <string name="dialogBrowuserFinished">Done</string>
+    <string name="title_activity_activity_text_displayer">ActivityTextDisplayer</string>
+    <string name="action_previous">Previous</string>
+    <string name="action_next">Next</string>
+    <string name="action_finish">Finish</string>
+    <string name="title_activity_file_browser">FileBrowser</string>
+    <string name="title_activity_browser">Browser</string>
+    <string name="textViewNoPreview">No Preview</string>
+    <string name="buttonStartReadin">Open this file</string>
+    <string name="search_hint">Search for pdf files</string>
+    <string name="action_search">Search</string>
+    <string name="action_back">Back</string>
+    <string name="title_activity_activitytext_displayer_with_features">ActivitytextDisplayerWithFeatures</string>
+
+</resources>

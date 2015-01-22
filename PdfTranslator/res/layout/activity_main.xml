@@ -1,0 +1,46 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:layout_margin="10dp"
+    android:weightSum="1">
+
+    <Button
+        android:id="@+id/buttonChoosePdfFile"
+        android:layout_width="0dp"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/round_button_cece"
+        android:layout_height="match_parent"
+        android:text="@string/buttonMenuBrowsePdf"
+        android:textColor="@color/greenBlue"
+        android:textSize="30sp"
+        android:layout_weight="0.33" />
+    
+    
+    <Button
+       android:id="@+id/buttonOpenLastPdfFile"
+       android:layout_width="0dp"
+       android:layout_marginLeft="10dp"
+       android:background="@drawable/round_button_green"
+       android:layout_height="match_parent"
+       android:text="@string/buttonMenuReadCurrentFile"
+       android:textColor="@color/greenBlue"
+       android:textSize="30sp"
+       android:layout_weight="0.33" />
+    
+    <Button
+       android:id="@+id/buttonOpenDictionary"
+       android:layout_width="0dp"
+       android:layout_marginLeft="10dp"
+       android:background="@drawable/round_button"
+       android:layout_height="match_parent"
+       android:text="@string/buttonViewDictionary"
+       android:textColor="@color/greenBlue"
+       android:textSize="30sp"
+       android:layout_weight="0.33"/>
+
+</LinearLayout> 
+
+

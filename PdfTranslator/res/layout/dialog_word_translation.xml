@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialogTableLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+>
+
+    <TableRow 
+	    android:id="@+id/tableRowHeader"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	 	
+	>
+	   
+	 	<TextView
+            android:id="@+id/CellHeadeer"
+            android:text="@string/CellTranslation"
+            android:layout_width="0dp"
+            android:layout_weight="0.25"
+            android:padding="5dp"
+            android:visibility="gone"
+    	/>    
+	    
+	</TableRow>
+    
+	<TableRow 
+	    android:id="@+id/tableRow1"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+	   
+	 <TextView
+            android:id="@+id/CellTranslation"
+            android:text="@string/CellTranslation"
+            android:layout_width="0dp"
+            android:layout_weight="0.25"
+            android:padding="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+	   
+	 <TextView
+            android:id="@+id/CellTranslationvalue"
+            android:text="Column 2"
+            android:layout_width="0dp"
+            android:layout_weight="0.75"
+             android:padding="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+	    
+	    
+	</TableRow>    
+	
+	<TableRow 
+	    android:id="@+id/CellDefinitionRow"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+	   
+	 <TextView
+            android:id="@+id/CellDefinition"
+            android:text="@string/CellDefinition"
+            android:layout_width="0dp"
+             android:padding="5dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+	   
+	   <TextView
+            android:id="@+id/CelllDefinitionValue"
+            android:text="sdfgsddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            android:layout_width="0dp"
+             android:padding="5dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.75"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+	    
+	    
+	</TableRow>
+	
+	
+	<TableRow 
+	    android:id="@+id/CellExampleRow"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+	   
+	 <TextView
+            android:id="@+id/CellExample"
+            android:text="@string/CellExample"
+            android:layout_width="0dp"
+             android:padding="5dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+	   
+	   <TextView
+            android:id="@+id/CelllExampleValue"
+            android:text="sdfgsddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            android:layout_width="0dp"
+             android:padding="5dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.75"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+	    
+	    
+	</TableRow>
+	
+	
+	
+	<TableRow 
+	    android:id="@+id/CellPartSpeechRow"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content">
+	   
+	 <TextView
+            android:id="@+id/CellPartSpeech"
+            android:text="@string/CellPartSpeech"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"
+             android:padding="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+	   
+	   <TextView
+            android:id="@+id/CelllParthSpeechValue"
+            android:text="sdfgsddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.75"
+            android:padding="5dp"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+	    
+	    
+	</TableRow>
+	
+	
+	
+		
+
+    
+    
+    
+</TableLayout>
