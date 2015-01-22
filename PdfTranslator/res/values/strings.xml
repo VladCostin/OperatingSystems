@@ -7,18 +7,16 @@
     <string name="buttonMenuBrowsePdf">Browse Sistem </string>
     <string name="buttonMenuReadCurrentFile">Continue with current file</string>
     <string name="buttonViewDictionary">View dictionary</string>
+    <string name="buttonMenuExercise">Exercise vocabulary</string>
     <string name="buttonSetWidge">Set quote Widget</string>
     <string name="buttonChoosePdfFile">Choose an EBook</string>
     <string name="buttonBackBrowser">Back</string>
     <string name="buttonCancelBrowser">Cancel</string>
     <string name="dialogBrowserTitle">Choose a file</string>
     <string name="dialogBrowuserFinished">Done</string>
-   
     <string name="action_previous">Previous</string>
     <string name="action_next">Next</string>
     <string name="action_finish">Finish</string>
-    
-    
     <string name="title_activity_file_browser">FileBrowser</string>
     <string name="title_activity_browser">Browser</string>
     <string name="title_action_bar_pagesId">Pages</string>
@@ -26,8 +24,6 @@
     <string name="title_previous_pages">Previous</string>
     <string name="title_other_books">Other books</string>
     <string name="title_name_current_book_dictionary">Current book</string>
-    
-    
     <string name="textViewNoPreview">No Preview</string>
     <string name="buttonStartReadin">Open this file</string>
     <string name="search_hint">Search for pdf files</string>
@@ -55,19 +51,15 @@
 
     <string name="title_activity_activity_text_displayer">TextDisplayer</string>
     <string name="title_activity_activity_dictionary">Dictionary</string>
-    
-    
     <string name="verb">Verbs</string>
     <string name="noun">Nouns</string>
     <string name="adjective">Adjectives</string>
     <string name="adverb">Adverbs</string>
-    
-    
     <string name="settingsSelectBook">Choose other book</string>
-  	<string name="settingsDecidePages">Go to page</string>
-  	<string name="settingsSearchWord">Search a word</string>  
-  	<string name="settingsSeeDictionary">See dictionary</string>
-  	
-  	<string name="buttonPreview">Preview</string>
+    <string name="settingsDecidePages">Go to page</string>
+    <string name="settingsSearchWord">Search a word</string>
+    <string name="settingsSeeDictionary">See dictionary</string>
+    <string name="buttonPreview">Preview</string>
+    <string name="title_activity_exercise">Exercise</string>
 
 </resources>

@@ -1,8 +1,7 @@
 package com.example.pdftranslator;
 
-import java.io.File;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,15 +10,13 @@ import java.util.Set;
 import com.example.pdftranslator.browse.FileBrowser;
 import com.example.pdftranslator.dictionary.ActivityDictionary;
 import com.example.pdftranslator.dictionary.ConstantsTabs;
-import com.memetix.mst.language.Language;
-import com.memetix.mst.translate.Translate;
 
-import Database.Appeareance;
+
+
 import Database.Book;
 import Database.DatabaseHandler;
 import Database.PartSpeech;
 import Database.Word;
-import android.support.v7.app.ActionBarActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -27,30 +24,22 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
+
 
 /**
- * @author admin
+ * @author Vlad Herescu
  *
  */
 public class MainActivity extends Activity implements OnClickListener, OnItemClickListener{

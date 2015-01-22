@@ -30,20 +30,22 @@
             android:label="@string/title_activity_activity_text_displayer" >
         </activity>
         <activity
-            android:name="com.example.pdftranslator.browse.FileBrowser"
+            android:name=".browse.FileBrowser"
             android:label="@string/title_activity_file_browser" >
             <meta-data
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        
         <activity
-            android:name="com.example.pdftranslator.dictionary.ActivityDictionary"
+            android:name=".dictionary.ActivityDictionary"
+            android:label="@string/title_activity_activity_dictionary"
             android:theme="@style/MyCustomTheme"
-            android:uiOptions="splitActionBarWhenNarrow"
-            android:label="@string/title_activity_activity_dictionary" >
+            android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
-
+        <activity
+            android:name="ExerciseActivity.Exercise"
+            android:label="@string/title_activity_exercise" >
+        </activity>
     </application>
 
 </manifest>
