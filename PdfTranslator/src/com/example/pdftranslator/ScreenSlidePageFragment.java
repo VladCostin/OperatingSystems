@@ -17,26 +17,17 @@
 package com.example.pdftranslator;
 
 import java.io.IOException;
-import java.util.LinkedHashMap;
 
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.memetix.mst.language.Language;
-
-import InternetConnection.BingTranslator;
 import InternetConnection.InternetConnection;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.Fragment;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnCancelListener;
-import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.View.OnTouchListener;
 import android.view.ViewParent;

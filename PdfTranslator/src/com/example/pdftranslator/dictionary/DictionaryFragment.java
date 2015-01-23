@@ -4,20 +4,17 @@ package com.example.pdftranslator.dictionary;
 
 import java.util.ArrayList;
 
-import com.example.pdftranslator.ActivityTextDisplayer;
 import com.example.pdftranslator.R;
 
 import Database.PartSpeech;
 import Database.Word;
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.textservice.TextInfo;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -25,10 +22,6 @@ import android.widget.TextView;
 public class DictionaryFragment  extends Fragment
 {
 	static String PARAMETER_RECEIVED = "TAB_ID";
-	
-
-	
-
 	
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup root, Bundle data)
@@ -106,14 +99,7 @@ class ItemAdapter extends ArrayAdapter<Word>
 		word.translation = (TextView) convertView.findViewById(R.id.CellTranslationvalue);
 		word.definition = (TextView) convertView.findViewById(R.id.CelllDefinitionValue);
 		word.example = (TextView) convertView.findViewById(R.id.CelllExampleValue);
-		//convertView.findViewById(R.id.CellPartSpeech).setVisibility(View.GONE);
 		convertView.findViewById(R.id.CellPartSpeechRow).setVisibility(View.GONE);
-		/*
-		word.header = (TextView) convertView.findViewById(R.id.textViewWordValueHeader);
-		word.translation = (TextView) convertView.findViewById(R.id.textViewWordTranslation);
-		word.definition = (TextView) convertView.findViewById(R.id.textViewWordDefinition);
-		word.example = (TextView) convertView.findViewById(R.id.textViewWordExample);
-		*/
 		word.header.setText(wordsToBeShown.get(i).getValue()); 
 		word.translation.setText(wordsToBeShown.get(i).getTranslation());
 		word.definition.setText(wordsToBeShown.get(i).getDefinition());
@@ -121,11 +107,6 @@ class ItemAdapter extends ArrayAdapter<Word>
 		
 		word.header.setTextColor(tab.color);
 		word.translation.setTextColor(tab.color);
-	//	word.definition.setTextColor(tab.color);
-	//	word.example.setTextColor(tab.color);
-
-		
-
 		convertView.setTag(word);
 		
 	    return convertView; 

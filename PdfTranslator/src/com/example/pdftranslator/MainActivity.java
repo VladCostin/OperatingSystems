@@ -14,7 +14,8 @@ import com.example.pdftranslator.dictionary.ConstantsTabs;
 
 
 
-import com.example.pdftranslator.exercise.Exercise;
+import com.example.pdftranslator.exercise.ExerciseSlider;
+
 
 import Database.Book;
 import Database.DatabaseHandler;
@@ -233,7 +234,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 		
 		if(  ((Button) v) == m_buttonShowExerciseActivity )
 		{
-			Intent intent = new Intent(this, Exercise.class);
+			Intent intent = new Intent(this, ExerciseSlider.class);
 			startActivity(intent);
 		}
 		

@@ -6,14 +6,7 @@
     android:orientation="vertical" >
     
     
-    <Spinner
-        android:id="@+id/spinnerBooksDialog"
-        android:layout_margin="50dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:entries="@array/country_arrays"
-        android:prompt="@string/country_prompt" />
+
     
 
 </LinearLayout>

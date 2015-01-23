@@ -43,8 +43,8 @@
             android:uiOptions="splitActionBarWhenNarrow" >
         </activity>
         <activity
-            android:name="ExerciseActivity.Exercise"
-            android:label="@string/title_activity_exercise" >
+            android:name="com.example.pdftranslator.exercise.ExerciseSlider"
+            android:label="@string/title_activity_exercise_slider" >
         </activity>
     </application>
 
