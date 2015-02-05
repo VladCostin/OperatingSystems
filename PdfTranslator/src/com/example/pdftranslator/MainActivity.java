@@ -17,6 +17,7 @@ import com.example.pdftranslator.dictionary.ConstantsTabs;
 import com.example.pdftranslator.exercise.ExerciseSlider;
 
 
+
 import Database.Book;
 import Database.DatabaseHandler;
 import Database.PartSpeech;
@@ -142,7 +143,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 		
 		m_pathFileToBeShown = null; // in case no file has been selected
 		
-		//this.getSharedPreferences(nameSharedPreferences, MODE_PRIVATE).edit().putStringSet(keySPGetPdgAndPage,  null).commit();
+		//this.getSharedPreferences(m_nameSharedPreferences, MODE_PRIVATE).edit().putStringSet(keySPGetPdgAndPage,  null).commit();
 		
 		m_database = new DatabaseHandler(this);
 		//database.onUpgrade(database.getWritableDatabase(), 1, 2);
@@ -209,10 +210,6 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
 	@Override
 	public void onClick(View v) {
-		
-		
-
-	
 
 		if( ( ( Button) v) == m_buttonSelectPdf )
 		{ 
@@ -310,7 +307,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 	
 	
 	/**
-	 * shows the user the pdf sterted to be read
+	 * shows the user the pdf started to be read
+	 * @return : the dialog where the user selects the book he wants to continue reading 
 	 */
 	public Dialog openedPdfFiles()
 	{
@@ -320,18 +318,23 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 		final Set<String> books = this.getSetDataBookSharedPreferences();
 		final List<String> titles = new ArrayList<String>();
 		View body = inflater.inflate(R.layout.dialog_select_book_dictionary_list, null);
-		//final Spinner spinnerBooks; 
-		
-		ArrayAdapter adapter;
+		ArrayAdapter<String> adapter;
 		
 		
 		for(String book : books)
 		{
 			
 			String title[] = book.split(Constants.separatorNamePage);
-			titles.add(title[0]);
+			String bookPath = title[0];
+			String bookData[] = bookPath.split("/");
+			
+			
+			titles.add(bookData[bookData.length - 1]);
+			
+			
+			Log.i("message", "file name added to the list : " + title[0]);
 		}
-		customDialog.setTitle(getResources().getString(R.string.dialogSelectBookPage));
+		customDialog.setTitle(getResources().getString(R.string.dialogSelectMarkBook));
 		customDialog.setView(body);
 
 		adapter = new ArrayAdapter<>(this, R.layout.spinner_layout_text_center, titles);
@@ -345,7 +348,9 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 			
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-
+					// added a Cancel button
+					// if the user pushes it, nothing happens
+					// it just exists the dialog
 			}
 		});
 		
@@ -361,7 +366,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 	{
 		SharedPreferences prefs;
 		Set<String> openedPdf;
-		prefs = getSharedPreferences(this.m_nameSharedPreferences, Context.MODE_PRIVATE);
+		prefs = getSharedPreferences(m_nameSharedPreferences, Context.MODE_PRIVATE);
 		openedPdf = prefs.getStringSet(keySPGetPdgAndPage, new HashSet<String>());
 		return openedPdf;
 	}
@@ -372,6 +377,9 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 	 */
 	public void startIntent(String fileName, int page)
 	{
+		
+		Log.i("message", "Numele fisierului instartIntent este : " + fileName);
+		
 		Intent intent = new Intent(this, ActivityTextDisplayer.class);
 		intent.putExtra(Constants.nameExtraStarttextDisplayer, m_pathFileToBeShown);
 		intent.putExtra(Constants.pageSaved, page);
@@ -418,7 +426,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 			return;
 		
 		prefs = this.getSharedPreferences
-		(this.m_nameSharedPreferences, Context.MODE_PRIVATE);
+		(m_nameSharedPreferences, Context.MODE_PRIVATE);
 		
 	    booksStarted = prefs.getStringSet(keySPGetPdgAndPage, new HashSet<String>());
 		
@@ -468,27 +476,38 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 
 		
 	    title =  parent.getItemAtPosition(position).toString();
+	    
+	    
+	    Log.i("message", "Title selected is : " + title );
+	    Log.i("message", "Position selected " + position);
 		
 		for(String openedFile : openedPdf)
 		{
 			
-			bookTitleSharedPreferences = openedFile.split(Constants.separatorNamePage)[0]; 
+			bookTitleSharedPreferences = openedFile.split(Constants.separatorNamePage)[0];
+			String bookData[] = bookTitleSharedPreferences.split("/");
+			String bookTitle = bookData[bookData.length - 1];
+			
+			
 			page = Integer.parseInt(openedFile.split(Constants.separatorNamePage)[1]);
 			Log.i("message", "date : " + page + " " + bookTitleSharedPreferences);
 			
-			Log.i("message", bookTitleSharedPreferences.toString() + " " + page);
+			Log.i("message", bookTitleSharedPreferences.toString() + " " + page + " " + bookTitle);
 			
 			
-			
-			if(bookTitleSharedPreferences.equals(title))
+			if(bookTitle.equals(title))
 			{
 				
+				
 				m_pathFileToBeShown = Environment.getExternalStorageDirectory().toString() +"/"+bookTitleSharedPreferences;
-				startIntent(books.get(i).getTitle(), page );
+				
+				System.out.println(bookTitle + " " + m_pathFileToBeShown);
+				
+				startIntent(bookTitle, page );
 				break;
 			}
 				
-			i++;
+
 		}
 		
 		

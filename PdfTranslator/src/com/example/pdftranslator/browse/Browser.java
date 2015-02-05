@@ -269,12 +269,6 @@ public class Browser extends Fragment implements OnItemClickListener,OnClickList
 			File f = allInfoFiles.get(idFile);
 			
 			
-		//	Log.i("message",  "hashmapul este : " + hashMapFileToOpen.toString());
-		//	for(File ff : allInfoFiles)
-		//	{
-		//		Log.i("message", ff.getAbsolutePath() + " " + ff.getName());
-		//	}
-			
 			if( button.getText().equals(getActivity().getResources().getString(R.string.buttonPreview)))
 			{
 				FileBrowser.setFileTobeShown(f);
@@ -289,9 +283,7 @@ public class Browser extends Fragment implements OnItemClickListener,OnClickList
 				FileBrowser.setFilePath(f);
 				Log.i("message", FileBrowser.getFilePath().getAbsolutePath());
 				startIntent(f.getName(), f.getAbsolutePath());
-				//Intent intent = new Intent(getActivity(), ActivityTextDisplayer.class);
-				//intent.putExtra(Constants.nameExtraStarttextDisplayer, FileBrowser.getFilePath().getAbsolutePath());
-				//startActivity(intent);
+
 				
 			}
 			
@@ -305,6 +297,11 @@ public class Browser extends Fragment implements OnItemClickListener,OnClickList
 	 */
 	public void startIntent(String fileName, String pathFileToBeShown)
 	{
+		
+		
+	//	Log.i("message","Browser - startIntent  : path ->" +  pathFileToBeShown);
+	//	Log.i("message", "Browser - onCLick : name ->" +  fileName);
+		
 		Intent intent = new Intent(this.getActivity(), ActivityTextDisplayer.class);
 		intent.putExtra(Constants.nameExtraStarttextDisplayer, pathFileToBeShown);
 		intent.putExtra(Constants.nameFile, fileName);

@@ -25,6 +25,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+/**
+ * the fragment where the preview is shown
+ * @author Vlad Herescu
+ *
+ */
 public class PreviewFragment extends Fragment implements OnClickListener{
 
 	/**
@@ -94,9 +99,14 @@ public class PreviewFragment extends Fragment implements OnClickListener{
 	@Override
 	public void onClick(View v) {
 		
-		Log.i("message", FileBrowser.getFilePath().getAbsolutePath());
+	//	Log.i("message","PreviewFragment - onClick  : path ->" +  FileBrowser.getFileTobeShown().getAbsolutePath());
+	//	Log.i("message", "PreviewFragment - onCLick : name ->" +  FileBrowser.getFileTobeShown().getName());
+		
+		
+		
 		Intent intent = new Intent(getActivity(), ActivityTextDisplayer.class);
-		intent.putExtra(Constants.nameExtraStarttextDisplayer, FileBrowser.getFilePath().getAbsolutePath());
+		intent.putExtra(Constants.nameExtraStarttextDisplayer, FileBrowser.getFileTobeShown().getAbsolutePath());
+		intent.putExtra(Constants.nameFile, FileBrowser.getFileTobeShown().getName());
 		startActivity(intent);
 		
 	}

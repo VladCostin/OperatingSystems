@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+import com.example.pdftranslator.browse.FileBrowser;
 import com.example.pdftranslator.dictionary.ActivityDictionary;
 import com.example.pdftranslator.dictionary.ConstantsTabs;
 import com.itextpdf.text.pdf.PdfReader;
@@ -11,7 +12,6 @@ import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 
 import Database.AttributesBook;
 import Database.Book;
-
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
@@ -89,14 +89,17 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
      * the information regarding the current book are used 
      * for adding new data into the database
      */
-    private static Book book;
+    private static Book m_book;
     
     /**
      * the path of the currentFile
      */
     String filePath;
     
-    String fileName;
+    /**
+     * name of the file to be added in the database
+     */
+    String m_fileName;
     
     Integer page;
 	
@@ -157,10 +160,15 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
 
 	private void initReader(String path,String fileName, int nrPage)
 	{
+		
+		Log.i("message","ActivityTextDisplayer - initReader : path ->" +  path);
+		Log.i("message", "ActivityTextDisplayer - initReader : name ->" +  fileName);
+		
+		
 		 try {
 		       	reader = new PdfReader( path);
 		       	stringFilePath = path;
-		       	this.fileName = fileName;
+		       	this.m_fileName = fileName;
 		       	
 		       	
 		       //	Log.i("NAME", getIntent().getStringExtra(Constants.nameExtraStarttextDisplayer));
@@ -180,9 +188,9 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
 	 */
 	public void setHeaderTitle() {
 		int titleLength;
-    	titleLength = fileName.length();
+    	titleLength = m_fileName.length();
     	titleLength = titleLength < 50 ? titleLength : 50;
-    	this.setTitle(fileName.substring(0, titleLength));
+    	this.setTitle(m_fileName.substring(0, titleLength));
 		
 	}
 
@@ -194,17 +202,17 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
 	 */
 	public void addBookIfIdDoesNotExist() {
 		
-		  book = MainActivity.m_database.getBook(AttributesBook.TITLE, fileName);
-		  if(book != null){
+		  m_book = MainActivity.m_database.getBook(AttributesBook.TITLE, m_fileName);
+		  if(m_book != null){
 			  Log.i("message", "exista deja");
 			  return;
 		  }
 		  
 		  Log.i("message", "nu exista deja");
-		  book = new Book(fileName, 0, NUM_PAGES, stringFilePath);
-		  MainActivity.m_database.addBook(book);
+		  m_book = new Book(m_fileName, 0, NUM_PAGES, stringFilePath);
+		  MainActivity.m_database.addBook(m_book);
 		  
-		  book.setId(MainActivity.m_database.getBookId(book.getTitle()));
+		  m_book.setId(MainActivity.m_database.getBookId(m_book.getTitle()));
 	}
 
 
@@ -333,7 +341,7 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
                 return true;
             case R.id.itemGoToDictionary:
             	Intent intent = new Intent(this, ActivityDictionary.class);
-            	intent.putExtra(ConstantsTabs.titleBook, this.book.getTitle());
+            	intent.putExtra(ConstantsTabs.titleBook, this.m_book.getTitle());
             	this.startActivity(intent);
         }
 
@@ -345,9 +353,13 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
 	
 	public void onPause()
 	{	
-		
+		Log.i("message", "NUMELE FISIERULUI IN SHARED PRFERENCES ESTE " +  this.m_fileName + " " + stringFilePath  );
 		Core.getHashMapBetweenMainAndReader().put(this.stringFilePath, mPager.getCurrentItem());
-		Log.i("message", "a intrat aici : " + mPager.getCurrentItem());
+	//	Log.i("message", "a intrat aici : " + mPager.getCurrentItem());
+		
+		
+		
+		
 		super.onPause();
 	}
 
@@ -421,13 +433,13 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
 
 
 	public static Book getBook() {
-		return book;
+		return m_book;
 	}
 
 
 
 	public static void setBook(Book book) {
-		ActivityTextDisplayer.book = book;
+		ActivityTextDisplayer.m_book = book;
 	}
 	
 }
