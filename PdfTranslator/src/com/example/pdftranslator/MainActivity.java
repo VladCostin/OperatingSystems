@@ -18,6 +18,13 @@ import com.example.pdftranslator.exercise.ExerciseSlider;
 
 
 
+
+
+
+
+import Database.Appeareance;
+import Database.AttributesBook;
+import Database.AttributesWord;
 import Database.Book;
 import Database.DatabaseHandler;
 import Database.PartSpeech;
@@ -146,15 +153,25 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 		//this.getSharedPreferences(m_nameSharedPreferences, MODE_PRIVATE).edit().putStringSet(keySPGetPdgAndPage,  null).commit();
 		
 		m_database = new DatabaseHandler(this);
+	//	m_database.deleteAllApp();
 		//database.onUpgrade(database.getWritableDatabase(), 1, 2);
 
 		//database.deleteAllWords();
 		//addDataDatabase();
 		//database.onUpgrade(database.getWritableDatabase(), 1, 2);
 		
+		//Word word = MainActivity.m_database.getWord(AttributesWord.ID, "1");
+		//Log.i("message", word.getId() + " " + word.getValue());
+		
+		
+
+	//	Log.i("message", m_database.getBook(AttributesBook.ID, "1").getTitle());
+		
 	}
 
 	public void addDataDatabase() {
+		
+		/*
 		
 		m_database.addWord(new Word("verb1", "vvaloare1", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.VERB.toString()));
 		m_database.addWord(new Word("verb2", "vvaloare1", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.VERB.toString()));
@@ -179,23 +196,24 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 		m_database.addWord(new Word("adverb3", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADVERB.toString()));
 		m_database.addWord(new Word("adverb4", "sdfdsfsdfsdfsdfs", "sdfdsfsdfsdfsdfs", "sdfdfdgdfgdf", PartSpeech.ADVERB.toString()));
 		
+		*/
 		
-	/*	database.addAppeareance(new Appeareance(1, 1, 1));
-		database.addAppeareance(new Appeareance(1, 2, 1));
-		database.addAppeareance(new Appeareance(1, 3, 1));
-		database.addAppeareance(new Appeareance(1, 4, 1));
+		m_database.addAppeareance(new Appeareance(1, 1, 1));
+		m_database.addAppeareance(new Appeareance(1, 2, 1));
+		m_database.addAppeareance(new Appeareance(1, 3, 1));
+		m_database.addAppeareance(new Appeareance(1, 4, 1));
 		
-		database.addAppeareance(new Appeareance(1, 5, 1));
-		database.addAppeareance(new Appeareance(1, 6, 1));
-		database.addAppeareance(new Appeareance(1, 7, 1));
-		database.addAppeareance(new Appeareance(1, 8, 1));
+		m_database.addAppeareance(new Appeareance(1, 5, 1));
+		m_database.addAppeareance(new Appeareance(1, 6, 1));
+		m_database.addAppeareance(new Appeareance(1, 7, 1));
+		m_database.addAppeareance(new Appeareance(1, 8, 1));
 		
-		database.addAppeareance(new Appeareance(1, 9, 1));
-		database.addAppeareance(new Appeareance(1, 10, 1));
-		database.addAppeareance(new Appeareance(1, 11, 1));
-		database.addAppeareance(new Appeareance(1, 12, 1));
+		m_database.addAppeareance(new Appeareance(1, 9, 1));
+		m_database.addAppeareance(new Appeareance(1, 10, 1));
+		m_database.addAppeareance(new Appeareance(1, 11, 1));
+		m_database.addAppeareance(new Appeareance(1, 12, 1));
 		
-	*/	
+		
 		
 		
 		
@@ -264,17 +282,16 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 		adapter = new ArrayAdapter<>(this, R.layout.spinner_layout_text_center, titles);
 		view = (ListView) body.findViewById(R.id.listviewDialogOpenStartedBooks);
 		view.setAdapter(adapter);
-		//spinnerBooks = (Spinner) body.findViewById(R.id.spinnerBooksDialog);
-		//spinnerBooks.setAdapter(adapter);
 		
+		OpenDictionaryDialogInterface dictionaryDialog = new OpenDictionaryDialogInterface(this,books,view);
 		
-		
-		//list = (ListView) body.findViewById(R.id.listview);
-		//list.setAdapter(adapter);
+		view.setOnItemClickListener(dictionaryDialog);
 		
 		customDialog.setButton(DialogInterface.BUTTON_POSITIVE,getResources().getString
-				(R.string.dialogSelectBookButtonPositive), new OpenDictionaryDialogInterface(this,books,view));
+				(R.string.dialogSelectBookButtonPositive), dictionaryDialog);
 		
+
+
 		
 		customDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getResources().getString
 		(R.string.dialogSelectBookButtonNeutral), new DialogInterface.OnClickListener() {
@@ -327,12 +344,10 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 			String title[] = book.split(Constants.separatorNamePage);
 			String bookPath = title[0];
 			String bookData[] = bookPath.split("/");
-			
-			
 			titles.add(bookData[bookData.length - 1]);
 			
 			
-			Log.i("message", "file name added to the list : " + title[0]);
+			//Log.i("message", "file name added to the list : " + title[0]);
 		}
 		customDialog.setTitle(getResources().getString(R.string.dialogSelectMarkBook));
 		customDialog.setView(body);
@@ -469,8 +484,7 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 		
 		Set<String> openedPdf;
 		String title, bookTitleSharedPreferences;
-		final List<Book> books = m_database.getAllBooks();
-		int i=0, page;
+		int  page;
 		
 		openedPdf = this.getSetDataBookSharedPreferences();
 

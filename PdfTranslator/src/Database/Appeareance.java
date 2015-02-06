@@ -31,14 +31,14 @@ public class Appeareance {
 		
 		this.id = id;
 		this.idBook = idBook;
-		this.idWord = idWord;
+		this.idWord = iWord;
 		this.page = page;
 	}
 	
 	public Appeareance( int idBook, int iWord, int page) {
 		
 		this.idBook = idBook;
-		this.idWord = idWord;
+		this.idWord = iWord;
 		this.page = page;
 	}
 	

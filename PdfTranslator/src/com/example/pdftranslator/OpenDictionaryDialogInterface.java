@@ -3,11 +3,17 @@ package com.example.pdftranslator;
 import java.util.List;
 
 import com.example.pdftranslator.dictionary.ActivityDictionary;
+import com.example.pdftranslator.dictionary.ConstantsTabs;
 
 import Database.Book;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
-import android.widget.Spinner;
 
 
 /**
@@ -15,61 +21,51 @@ import android.widget.Spinner;
  * @author admin
  *
  */
-public class OpenDictionaryDialogInterface implements DialogInterface.OnClickListener
+public class OpenDictionaryDialogInterface implements DialogInterface.OnClickListener, OnItemClickListener
 {
-	MainActivity mainActivity;
-	ActivityDictionary dictionaryActivity;
+	Context m_context;
 	List<Book> books;
 	ListView view;
-//	Spinner spinnerBooks;
-/*	
-	public OpenDictionaryDialogInterface(MainActivity activity, List<Book> books, Spinner spinnerBooks) {
+
+	public OpenDictionaryDialogInterface(Context activity, List<Book> books, ListView spinnerBooks) {
 		
-		this.mainActivity = activity;
+		this.m_context = activity;
 		this.books = books;
-		this.spinnerBooks = spinnerBooks;
+		this.view = spinnerBooks;
 		
 	}
 	
-	public OpenDictionaryDialogInterface(ActivityDictionary activity, List<Book> books, Spinner spinnerBooks) {
-		
-		this.dictionaryActivity = activity;
-		this.books = books;
-		this.spinnerBooks = spinnerBooks;
-		
-	}
-*/
-	public OpenDictionaryDialogInterface(MainActivity activity, List<Book> books, ListView spinnerBooks) {
-		
-		this.mainActivity = activity;
-		this.books = books;
-		this.view = spinnerBooks;
-	//	this.spinnerBooks = spinnerBooks;
-		
-	}
-	
-	public OpenDictionaryDialogInterface(ActivityDictionary activity, List<Book> books, ListView spinnerBooks) {
-		
-		this.dictionaryActivity = activity;
-		this.books = books;
-		this.view = spinnerBooks;
-	//	this.spinnerBooks = spinnerBooks;
-		
-	}
+
 	
 	@Override
 	public void onClick(DialogInterface dialog, int which) {
 	
-		for(Book book : books) 
-			if(book.getTitle().equals(view.getSelectedItem().toString()))
-			{
-					if(mainActivity != null)
-						mainActivity.openActivityShowDictionary(book);
-					else
-						dictionaryActivity.update();
-					break;
-			}
+		//Intent intent = new Intent(packageContext, cls)
+		startActivity(Constants.m_AllBooks); 
 
+	}
+
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		
+		startActivity(parent.getItemAtPosition(position).toString());
+
+	}
+	
+	
+	/**
+	 * shows the words in the dictionary from a book selected or from all books
+	 * @param titleBook : the title of the book of which the words will be shown
+	 * 
+	 */
+	public void startActivity(String titleBook)
+	{
+		
+    	Intent intent = new Intent(m_context, ActivityDictionary.class);
+    	intent.putExtra(ConstantsTabs.titleBook, titleBook);
+    	m_context.startActivity(intent);
 	}
 	
 }

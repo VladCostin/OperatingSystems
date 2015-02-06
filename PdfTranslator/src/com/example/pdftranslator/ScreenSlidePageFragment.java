@@ -17,9 +17,13 @@
 package com.example.pdftranslator;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
 import com.memetix.mst.language.Language;
+
 import InternetConnection.InternetConnection;
 import android.app.Fragment;
 import android.os.Bundle;
@@ -34,11 +38,8 @@ import android.view.ViewParent;
 import android.widget.TextView;
 
 /**
- * A fragment representing a single step in a wizard. The fragment shows a dummy title indicating
- * the page number, along with some dummy text.
+ * A fragment representing a single step in a wizard. 
  *
- * <p>This class is used by the {@link CardFlipActivity} and {@link
- * ScreenSlideActivity} samples.</p>
  */
 public class ScreenSlidePageFragment extends Fragment implements OnTouchListener {
     /**
@@ -117,34 +118,39 @@ public class ScreenSlidePageFragment extends Fragment implements OnTouchListener
      */
     public String textArranged(String textPage)
     {  	    
-    	/*boolean lines= false;
-    	do
-    	{
-    		textPage.in
-    		if(textPage.contains("\n [a-z]"))
-    			
-    			
-    	}while(lines= true);
+          String regex = "\n([a-z]|[A-Z]|[',.\"]())";
+    	  ArrayList<Integer> indexes = patternMethod(regex, textPage);
     	
-    	*/
-  	    /*  textPage = textPage.replaceAll("\n[a-z]", "[a-z]");
-  	      textPage = textPage.replaceAll("\n [a-z]", "[a-z]");
-  	      textPage = textPage.replaceAll("\n[a-z] ", "[a-z]");
-  	      
-  	    /*  
-  	      textPage = textPage.replaceAll(".\n[a-z]", " ");
-  	      textPage = textPage.replaceAll(".\n [a-z]", " ");
-  	      textPage = textPage.replaceAll(".\n[a-z] ", " ");
-  	      
-  	      textPage = textPage.replaceAll(",\n[a-z]", " ");
-  	      textPage = textPage.replaceAll(",\n [a-z]", " ");
-  	      textPage = textPage.replaceAll(",\n[a-z] ", " ");
-  	     */ 
-  	      return textPage;
+    	
+  	      return  deleteValues(textPage, indexes);
   	     
   	      
 
     }
+    
+    public static String deleteValues(String text, ArrayList<Integer> indexes) {
+		
+		StringBuffer buffer = new StringBuffer(text);
+		for(Integer index : indexes)
+			buffer.replace(index, index+ 1, " ");
+		
+
+		return buffer.toString();
+	}
+
+
+	public static ArrayList<Integer> patternMethod(String regex, String text)
+	{
+		ArrayList<Integer> values = new ArrayList<Integer>();
+	    Pattern pattern = Pattern.compile(regex, 0);
+	    Matcher matcher = pattern.matcher(text);
+	    while (matcher.find()) {
+	        values.add(matcher.start());
+	    }
+	    
+	    return values;
+	}
+    
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		

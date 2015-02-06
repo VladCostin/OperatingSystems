@@ -111,6 +111,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
 		values.put(AttributesAppearences.WORD, appeareance.getIdWord());
 		values.put(AttributesAppearences.PAGE, appeareance.getPage());
 		
+		
+		db.insert(AttributesAppearences.table_name, null, values);
 	}
 	
 	
@@ -302,6 +304,13 @@ public class DatabaseHandler extends SQLiteOpenHelper
 	{
 		   SQLiteDatabase db = this.getWritableDatabase();
 		   db.delete(AttributesWord.table_name, null, null);
+		   db.close();
+	}
+	
+	public void deleteAllApp()
+	{
+		   SQLiteDatabase db = this.getWritableDatabase();
+		   db.delete(AttributesAppearences.table_name, null, null);
 		   db.close();
 	}
 	

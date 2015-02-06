@@ -120,10 +120,6 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activity_text_displayer);
         
-
-
-        
-        
     
         getDataFromActivities();
         ActivityTextDisplayer.setBooleanSearchNewWord(true);
@@ -356,10 +352,7 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
 		Log.i("message", "NUMELE FISIERULUI IN SHARED PRFERENCES ESTE " +  this.m_fileName + " " + stringFilePath  );
 		Core.getHashMapBetweenMainAndReader().put(this.stringFilePath, mPager.getCurrentItem());
 	//	Log.i("message", "a intrat aici : " + mPager.getCurrentItem());
-		
-		
-		
-		
+
 		super.onPause();
 	}
 

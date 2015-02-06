@@ -103,7 +103,6 @@ public class PreviewFragment extends Fragment implements OnClickListener{
 	//	Log.i("message", "PreviewFragment - onCLick : name ->" +  FileBrowser.getFileTobeShown().getName());
 		
 		
-		
 		Intent intent = new Intent(getActivity(), ActivityTextDisplayer.class);
 		intent.putExtra(Constants.nameExtraStarttextDisplayer, FileBrowser.getFileTobeShown().getAbsolutePath());
 		intent.putExtra(Constants.nameFile, FileBrowser.getFileTobeShown().getName());

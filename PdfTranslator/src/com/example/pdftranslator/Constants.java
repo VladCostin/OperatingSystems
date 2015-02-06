@@ -26,6 +26,11 @@ public interface Constants {
 	 */
 	String separatorNamePage				= "#######";
 	
+	
+	
+	String m_AllBooks					= "All Books";
+	
+	
 	/*
 	String nameLastActivityMain				= "MainActivity";
 	

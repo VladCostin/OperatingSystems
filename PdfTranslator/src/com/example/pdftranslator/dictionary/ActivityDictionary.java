@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
+import com.example.pdftranslator.Constants;
 import com.example.pdftranslator.CustomDialog;
 import com.example.pdftranslator.MainActivity;
 import com.example.pdftranslator.OpenDictionaryDialogInterface;
@@ -19,9 +20,12 @@ import com.example.pdftranslator.R;
 
 
 
+
+
 import Database.Appeareance;
 import Database.AttributesAppearences;
 import Database.AttributesBook;
+import Database.AttributesWord;
 import Database.Book;
 import Database.PartSpeech;
 import Database.Word;
@@ -71,8 +75,7 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 	/**
 	 * saving the instances of the fragments as ViewGroup for updating
 	 */
-	//static HashMap<Integer,ViewGroup> hashMapFragments;
-	//static HashMap<Integer,View> hashMapFragments;
+
 	static HashMap<Integer,DictionaryFragment> hashMapFragments;
 	/**
 	 * reference to the ActionBar menu
@@ -86,21 +89,22 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 		setContentView(R.layout.activity_activity_dictionary);
 			
 		init();
-		getDataFromIntent();
+		getDataToShow();
+
 		setViewPager();
 		addTabs();
-		getDadaDatabase();
+
 		associateFragmentIdToPartSpeech();
 		
 		
 		
 	}
 
+
+
 	private void init() {
 		hashMapTypeWordAssociatedToFragment = new HashMap<Integer,MyTab>();
 		hashMapWords = new HashMap<PartSpeech, ArrayList<Word>>();
-		//hashMapFragments = new HashMap<Integer, ViewGroup>();
-		//hashMapFragments = new HashMap<Integer, View>();
 		hashMapFragments = new HashMap<Integer, DictionaryFragment>();
 	}
 
@@ -129,13 +133,17 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 	/**
 	 * obtains the id of the book whose unknown words will be shown
 	 */
-	public void getDataFromIntent() {
+	public void getDataToShow() {
 		
 		Integer idBook = getIntent().getIntExtra(ConstantsTabs.idBook, 0);
 		String book = getIntent().getStringExtra(ConstantsTabs.titleBook);
 		
-		setTitle(getTitle() + ": " + book.substring(0, 30));
-		getBookData(book);
+	
+		setTitle(getTitle() + ": " + book.substring(0, Math.min(book.length(), 30)));
+		if(book.equals(Constants.m_AllBooks))
+			getAllDataFromDatabase();
+		else
+			getBookData(book);
 	}
 	
 	/**
@@ -144,36 +152,55 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 	 */
 	public void getBookData(String name)
 	{
-		/*
-		Book book = MainActivity.database.getBook(AttributesBook.TITLE, name);
+
+		Book book = MainActivity.m_database.getBook(AttributesBook.TITLE, name);
+		//Log.i("message", "date :" + book.getTitle() + " " + book.getId());
 		
-		List<Appeareance> apps = MainActivity.database.getAllAppearances();
+		List<Appeareance> apps = MainActivity.m_database.getAppearances(
+			 AttributesAppearences.BOOK, Integer.toString( book.getId()));
+		List<Word> words = new ArrayList<Word>();
 		if(apps == null)
 			Log.i("message", "este app null");
 		else{
 			for(Appeareance app : apps )
-				Log.i("message", app.getId() + " " + app.getIdBook() + app.getIdWord());
-			Log.i("message", "NU ESTE NULL");
-		}
-		/*
-		List<Appeareance> apps = MainActivity.database.getAppearances
-				(AttributesAppearences.BOOK, new Integer( book.getId()).toString());
-		if(apps == null)
-		{
-			Log.i("message", "este app null");
-		}
-		else
-			for(Appeareance app : apps )
-				Log.i("message", app.getId() + " " + app.getIdBook() + app.getIdWord());
+			{
 				
-		*/
+			//	Log.i("message","ActivityDictionary - getBookData" + app.getId() + " " + app.getIdBook() + " " + app.getIdWord() + " " + app.getPage());
+				
+				Word word = MainActivity.m_database.getWord(AttributesWord.ID, Integer.toString( app.getIdWord()) );
+				Log.i("message", "ActivityDictionary - getBookData" + word.getValue() +  " " + word.getPart());
+				words.add(word);
+				
+			}
+				//Log.i("message","ActivityDictionary - getBookData" + app.getId() + " " + app.getIdBook() + " " + app.getIdWord() + " " + app.getPage());
+				//Log.i("message", "NU ESTE NULL");
+		}
+		
+		 addWordsInSets(words);
+
 	}
 	
 	
 	/**
 	 * obtains data from database regarding the words to be shown 
 	 */
-	public void getDadaDatabase()
+	public void getAllDataFromDatabase()
+	{
+
+		
+		List<Word> words = MainActivity.m_database.getAllWords(); 		
+		addWordsInSets(words);
+
+		
+		Log.i("message", "Size este : " + hashMapWords.get(PartSpeech.VERB));
+		
+	}
+	
+	/**
+	 * @param _words : the list of words retrieved from database
+	 * 
+	 */
+	public void addWordsInSets(List<Word> _words)
 	{
 		hashMapWords.clear();
 		ArrayList<Word> wordsVerbs = new ArrayList<Word>();
@@ -181,18 +208,11 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 		ArrayList<Word> wordsAdjective = new ArrayList<Word>();
 		ArrayList<Word> wordsAdverb = new ArrayList<Word>();
 		
-		List<Word> words = MainActivity.m_database.getAllWords(); 
-		Collections.sort(words, new Comparator(){
-
-			@Override
-			public int compare(Object lhs, Object rhs) {
-				// TODO Auto-generated method stub
-				return 0;
-			}
-			
-		});
 		
-		for(Word word : words){
+		for(Word word : _words){
+			
+			Log.i("message", "ActivityDictionary - addWordsInSets" + word.getValue() +  " " + word.getPart());
+			
 		//	Log.i("message", word.getValue());
 			if(word.getPart().equals(PartSpeech.VERB.toString()))
 				wordsVerbs.add(word);
@@ -202,16 +222,21 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 				wordsAdjective.add(word);
 			if(word.getPart().equals(PartSpeech.ADVERB.toString()))
 				wordsAdverb.add(word);
+				
+		
 		}
+		
 		
 		hashMapWords.put(PartSpeech.VERB, wordsVerbs);
 		hashMapWords.put(PartSpeech.NOUN, wordsNouns);
 		hashMapWords.put(PartSpeech.ADJECTIVE, wordsAdjective);
 		hashMapWords.put(PartSpeech.ADVERB, wordsAdverb);
 		
-		Log.i("message", "Size este : " + hashMapWords.get(PartSpeech.VERB));
 		
+		Log.i("message", "ActivityDictionary - addWordsInSets : " +  hashMapWords);
 	}
+	
+	
 	public void clearDatabase()
 	{
 		hashMapWords.clear();
