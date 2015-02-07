@@ -191,8 +191,8 @@ public class DatabaseHandler extends SQLiteOpenHelper
 	    return word;
 	}
 	
-	public List<Word> getAllWords() {
-	    List<Word> wordList = new ArrayList<Word>();
+	public ArrayList<Word> getAllWords() {
+	    ArrayList<Word> wordList = new ArrayList<Word>();
 	    // Select All Query
 	    String selectQuery = "SELECT  * FROM " + AttributesWord.table_name;
 	 

@@ -81,20 +81,13 @@ public class ScreenSlidePageFragment extends Fragment implements OnTouchListener
                 .inflate(R.layout.fragment_screen_slide_page, container, false);
         String textFromPdf;
         TextView textViewDisplayer;
-	//    LinkedHashMap<Integer, String>	letter_index = new  LinkedHashMap<Integer,String>();
-	 //   int i;
-		
 
         try {		
 					
 			textFromPdf = PdfTextExtractor.getTextFromPage
 			(ActivityTextDisplayer.reader,mPageNumber + 1);
 			textFromPdf = textArranged(textFromPdf);
-			
-	/*		for( i = 0; i < textFromPdf.length(); i++)
-				letter_index.put(i,Character.toString( textFromPdf.charAt(i)));
-			ActivityTextDisplayer.letter_index = letter_index;
-	*/		
+	
 			
 			textViewDisplayer =  (TextView) rootView.findViewById(android.R.id.text1);
 			textViewDisplayer.setOnTouchListener(this);
@@ -128,6 +121,12 @@ public class ScreenSlidePageFragment extends Fragment implements OnTouchListener
 
     }
     
+	/**
+	 * replaces the unnecessary  \n with " " 
+	 * @param text : the text unparsed
+	 * @param indexes : the indexes of \n
+	 * @return : the parsed text
+	 */
     public static String deleteValues(String text, ArrayList<Integer> indexes) {
 		
 		StringBuffer buffer = new StringBuffer(text);
@@ -138,7 +137,12 @@ public class ScreenSlidePageFragment extends Fragment implements OnTouchListener
 		return buffer.toString();
 	}
 
-
+	/**
+	 * @param regex : the pattern used to identify the unnecessary \n
+	 * @param text : the unparsed text
+	 * @return : the list of indexes with the \n identified
+	 * 
+	 */
 	public static ArrayList<Integer> patternMethod(String regex, String text)
 	{
 		ArrayList<Integer> values = new ArrayList<Integer>();
@@ -173,9 +177,7 @@ public class ScreenSlidePageFragment extends Fragment implements OnTouchListener
 				break;
 		}
 		
-	 
 
-	    
 		return true;
 	}
 	

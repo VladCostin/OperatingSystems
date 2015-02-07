@@ -47,7 +47,7 @@ public class DictionaryFragment  extends Fragment
 		
 		
 		ItemAdapter adapter = new ItemAdapter(getActivity(), R.layout.dialog_word_translation,
-					ActivityDictionary.hashMapWords.get(part),ActivityDictionary.getHashMapTypeWordAssociatedToFragment().get(args.getInt(PARAMETER_RECEIVED)) );
+					ActivityDictionary.m_hashMapWords.get(part),ActivityDictionary.getHashMapTypeWordAssociatedToFragment().get(args.getInt(PARAMETER_RECEIVED)) );
 		
 	//	ItemAdapter adapter = new ItemAdapter(getActivity(), R.layout.item_listview_word,
 	//			ActivityDictionary.hashMapWords.get(part),ActivityDictionary.getHashMapTypeWordAssociatedToFragment().get(args.getInt(PARAMETER_RECEIVED)) );

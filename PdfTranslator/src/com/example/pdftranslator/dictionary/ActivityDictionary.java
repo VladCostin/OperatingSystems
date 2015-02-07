@@ -2,25 +2,17 @@ package com.example.pdftranslator.dictionary;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
 import com.example.pdftranslator.Constants;
 import com.example.pdftranslator.CustomDialog;
 import com.example.pdftranslator.MainActivity;
-import com.example.pdftranslator.OpenDictionaryDialogInterface;
 import com.example.pdftranslator.R;
 
 
-
-
-
-
-
-
-
+import com.example.pdftranslator.dictionary.controller.ControllerDictionary;
+import com.example.pdftranslator.dictionary.model.CoreDictionary;
 
 import Database.Appeareance;
 import Database.AttributesAppearences;
@@ -46,26 +38,40 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Spinner;
 
-public class ActivityDictionary extends Activity implements ActionBar.TabListener {
+public class ActivityDictionary extends Activity implements ActionBar.TabListener, ActivityInterface {
 
 	/**
 	 * contains the information about the word from the dictionary
 	 */
-	ViewPager viewPager;
+	ViewPager m_viewPager;
 	
 	/**
 	 * the adapter used to switch between the fragments
 	 */
-	TabPageAdapter adapter;
+	TabPageAdapter m_adapter;
+	
+	
+	/**
+	 * represents the business model
+	 * it filters the data
+	 * and orders it
+	 */
+	CoreDictionary m_core;
+	
+	
+	/**
+	 * the controller that receives the input from the user
+	 */
+	ControllerDictionary m_controller;
 	
 	
 	/**
 	 * every fragment gets the list of words needed to be shown from this HASHMAP
 	 */
-	static HashMap<PartSpeech,ArrayList<Word>> hashMapWords;
+	static HashMap<PartSpeech,ArrayList<Word>> m_hashMapWords;
 	
 	/**
 	 * the id of the fragment is associated to the Type of words to be shown
@@ -80,7 +86,7 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 	/**
 	 * reference to the ActionBar menu
 	 */
-	Menu menu;
+	Menu m_menu;
 	
 	
 	@Override
@@ -95,17 +101,21 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 		addTabs();
 
 		associateFragmentIdToPartSpeech();
-		
+		getWordsFromCore();
 		
 		
 	}
 
 
-
-	private void init() {
+	/**
+	 * initializing the data of the activity
+	 */
+	public void init() {
 		hashMapTypeWordAssociatedToFragment = new HashMap<Integer,MyTab>();
-		hashMapWords = new HashMap<PartSpeech, ArrayList<Word>>();
+		m_hashMapWords = new HashMap<PartSpeech, ArrayList<Word>>();
 		hashMapFragments = new HashMap<Integer, DictionaryFragment>();
+		m_core = new CoreDictionary(this);
+		m_controller = new ControllerDictionary(m_core);
 	}
 
 	/**
@@ -152,13 +162,14 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 	 */
 	public void getBookData(String name)
 	{
-
+		ArrayList<Word> words = new ArrayList<Word>();
 		Book book = MainActivity.m_database.getBook(AttributesBook.TITLE, name);
 		//Log.i("message", "date :" + book.getTitle() + " " + book.getId());
 		
 		List<Appeareance> apps = MainActivity.m_database.getAppearances(
 			 AttributesAppearences.BOOK, Integer.toString( book.getId()));
-		List<Word> words = new ArrayList<Word>();
+		
+		
 		if(apps == null)
 			Log.i("message", "este app null");
 		else{
@@ -172,12 +183,11 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 				words.add(word);
 				
 			}
-				//Log.i("message","ActivityDictionary - getBookData" + app.getId() + " " + app.getIdBook() + " " + app.getIdWord() + " " + app.getPage());
-				//Log.i("message", "NU ESTE NULL");
+
 		}
 		
-		 addWordsInSets(words);
-
+		
+		m_core.setM_wordsFromBook(words); 
 	}
 	
 	
@@ -187,60 +197,22 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 	public void getAllDataFromDatabase()
 	{
 
+		ArrayList<Word> words = MainActivity.m_database.getAllWords(); 		
+		m_core.setM_wordsFromBook(words); 
+		Log.i("message", "Size este : " + m_hashMapWords.get(PartSpeech.VERB));
 		
-		List<Word> words = MainActivity.m_database.getAllWords(); 		
-		addWordsInSets(words);
+	}
+	
 
-		
-		Log.i("message", "Size este : " + hashMapWords.get(PartSpeech.VERB));
-		
-	}
-	
 	/**
-	 * @param _words : the list of words retrieved from database
-	 * 
+	 * gets the data from the core to be set in the activity's members
 	 */
-	public void addWordsInSets(List<Word> _words)
-	{
-		hashMapWords.clear();
-		ArrayList<Word> wordsVerbs = new ArrayList<Word>();
-		ArrayList<Word> wordsNouns = new ArrayList<Word>();
-		ArrayList<Word> wordsAdjective = new ArrayList<Word>();
-		ArrayList<Word> wordsAdverb = new ArrayList<Word>();
+	public void getWordsFromCore() {
 		
+		m_hashMapWords = m_core.addWordsInSet();
 		
-		for(Word word : _words){
-			
-			Log.i("message", "ActivityDictionary - addWordsInSets" + word.getValue() +  " " + word.getPart());
-			
-		//	Log.i("message", word.getValue());
-			if(word.getPart().equals(PartSpeech.VERB.toString()))
-				wordsVerbs.add(word);
-			if(word.getPart().equals(PartSpeech.NOUN.toString()))
-				wordsNouns.add(word);
-			if(word.getPart().equals(PartSpeech.ADJECTIVE.toString()))
-				wordsAdjective.add(word);
-			if(word.getPart().equals(PartSpeech.ADVERB.toString()))
-				wordsAdverb.add(word);
-				
-		
-		}
-		
-		
-		hashMapWords.put(PartSpeech.VERB, wordsVerbs);
-		hashMapWords.put(PartSpeech.NOUN, wordsNouns);
-		hashMapWords.put(PartSpeech.ADJECTIVE, wordsAdjective);
-		hashMapWords.put(PartSpeech.ADVERB, wordsAdverb);
-		
-		
-		Log.i("message", "ActivityDictionary - addWordsInSets : " +  hashMapWords);
 	}
-	
-	
-	public void clearDatabase()
-	{
-		hashMapWords.clear();
-	}
+
 
 	/**
 	 * loads the pager adapter
@@ -248,9 +220,9 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 	 */
 	public void setViewPager() {
 		
-		adapter = new TabPageAdapter(this.getFragmentManager(), this);
-		this.viewPager = (ViewPager) findViewById(R.id.viewPagerDictionaryTabs);
-		viewPager.setAdapter(adapter);
+		m_adapter = new TabPageAdapter(this.getFragmentManager(), this);
+		m_viewPager = (ViewPager) findViewById(R.id.viewPagerDictionaryTabs);
+		m_viewPager.setAdapter(m_adapter);
 		
 
 	}
@@ -271,9 +243,6 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 		View tabAdverbView = inflater.inflate(R.layout.tab_adverb, null);
 		
 		
-
-		
-		
 		tabVerb = actionBar.newTab().setText(ConstantsTabs.partVerb);
 		tabNoun = actionBar.newTab().setText(ConstantsTabs.partNown);
 		tabAdjective = actionBar.newTab().setText(ConstantsTabs.partAdjective);
@@ -289,7 +258,7 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 		tabAdjective.setTabListener(this);
 		tabAdverb.setTabListener(this);
 			
-        this.viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
+        this.m_viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
                 // When swiping between different app sections, select the corresponding tab.
@@ -311,10 +280,17 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		this.menu = menu;
+		m_menu = menu;
 		getMenuInflater().inflate(R.menu.activity_dictionary, menu);
 
 		
+		/** Get the action view of the menu item whose id is search */
+        View v = (View) menu.findItem(R.id.itemNextNPages).getActionView();
+ 
+        /** Get the edit text from the action view */
+      //  EditText txtSearch = ( EditText ) v.findViewById(R.id.editTextGoToPage);
+	//	txtSearch.setText(ConstantsTabs.m_WordsShownStart);
+		 
 		return true;
 	}
 
@@ -334,6 +310,21 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 		{
 			showDialogDictionary().show();
 		}
+		if(id == R.id.buttonBefore)
+		{
+			m_core.showBeforeWords();
+			update();
+		}
+		if(id == R.id.buttonNext)
+		{
+			m_core.showNextWords();
+			update();
+		}
+		
+		if(id == R.id.itemSettingsDictionary)
+		{
+			showDialogSetSettings().show();
+		}
 			
 		
 		
@@ -343,6 +334,52 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 	
 	
 	
+	/**
+	* 
+	*/
+	public Dialog showDialogSetSettings() {
+		
+		final CustomDialog customDialog = new CustomDialog(this, R.color.orange);
+		LayoutInflater inflater = this.getLayoutInflater();
+		View body = inflater.inflate(R.layout.dialog_select_book_dictionary_list, null);
+		ArrayAdapter<String> adapter;
+		final List<String> options = new ArrayList<String>();
+		
+		
+		options.add(ConstantsTabs.orderAlph);
+		options.add(ConstantsTabs.orderId);
+		adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_singlechoice, options);
+		
+		
+		ListView list = (ListView) body.findViewById(R.id.listviewDialogOpenStartedBooks); 		
+		list.setAdapter(adapter);
+		list.setOnItemClickListener(m_controller);
+
+		
+		
+		customDialog.setTitle(getResources().getString(R.string.dialogDictionarySettingsTitle));
+		customDialog.setView(body);
+		
+		
+		customDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getResources().getString
+		(R.string.dialogSelectBookButtonNeutral), new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+					// added a Cancel button
+					// if the user pushes it, nothing happens
+					// it just exists the dialog
+			}
+		});
+		
+		customDialog.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString
+		(R.string.dialogSelectBookButtonPositive), m_controller);
+		
+		return customDialog;
+		
+	}
+
+
 	private Dialog showDialogDictionary() {
 		
 		
@@ -400,7 +437,7 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 
 	@Override
 	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		this.viewPager.setCurrentItem(tab.getPosition());
+		this.m_viewPager.setCurrentItem(tab.getPosition());
 		
 	}
 
@@ -426,14 +463,15 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 	}
 	
 	
+	/**
+	 * updates the information shown in the tabs
+	 * after the user has selected previous or next
+	 */
 	public void update()
 	{
-		for(PartSpeech part :hashMapWords.keySet())
-		{
-			hashMapWords.get(part).clear();
-		}
 
-		adapter.notifyDataSetChanged();
+		m_hashMapWords = m_core.addWordsInSet();
+		m_adapter.notifyDataSetChanged();
 		
 
 	}

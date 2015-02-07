@@ -352,6 +352,8 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 		customDialog.setTitle(getResources().getString(R.string.dialogSelectMarkBook));
 		customDialog.setView(body);
 
+
+		
 		adapter = new ArrayAdapter<>(this, R.layout.spinner_layout_text_center, titles);
 		m_viewOpenPdf = (ListView) body.findViewById(R.id.listviewDialogOpenStartedBooks); 		
 		m_viewOpenPdf.setAdapter(adapter);

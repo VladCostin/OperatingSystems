@@ -20,5 +20,13 @@ public interface ConstantsTabs {
 	String titleBook		= "TITLE_BOOk";
 	
 	
+	String orderAlph		= "Alphabetically";
+	
+	
+	String orderId			= "By search time";
+	
+	int m_WordsShownStart   = 30;
+	
+	
 	
 }

@@ -132,10 +132,6 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
 
     }
 
-
-
-
-
 	/**
 	 * gets data from the activities that have started ActivityTextDisplayer
 	 * such as the title of the book and the page
