@@ -16,8 +16,15 @@ import android.widget.AdapterView.OnItemClickListener;
  */
 public class ControllerDictionary implements  DialogInterface.OnClickListener, OnItemClickListener {
 
+	/**
+	 * contains the model of the activity
+	 * and keeps in mind the current state : order of the words, how many words shown
+	 */
 	CoreDictionary m_core;
 	
+	/**
+	 * @param _core : the model data of the activity
+	 */
 	public ControllerDictionary(CoreDictionary _core)
 	{
 		m_core = _core;
@@ -36,7 +43,7 @@ public class ControllerDictionary implements  DialogInterface.OnClickListener, O
 			long id) {
 		
 		
-		m_core.setM_typeOrder( parent.getItemAtPosition(position).toString());
+		m_core.setM_typeOrder( parent.getItemAtPosition(position).toString(), position);
 		
 		
 	}

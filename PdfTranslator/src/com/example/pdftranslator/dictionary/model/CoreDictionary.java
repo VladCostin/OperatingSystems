@@ -49,6 +49,12 @@ public class CoreDictionary {
 	 * used to update their interface
 	 */
 	 ActivityInterface m_interface;
+	 
+	 /**
+	 * the index of the element which shows the order of the words shown : alphabetically or by index
+	 */
+	private int m_indexOrderShown;
+	 
 
 	/**
 	 * initialing the Core
@@ -58,6 +64,8 @@ public class CoreDictionary {
 		m_wordsFromBook = new ArrayList<Word>();
 		m_nrWordsShown = ConstantsTabs.m_WordsShownStart;
 		m_interface = _interface;
+		
+		m_indexOrderShown = 0;
 	}
 	
 	/**
@@ -158,7 +166,7 @@ public class CoreDictionary {
 	 */
 	public void setM_wordsFromBook(ArrayList<Word> _wordsFromBook) {
 		m_wordsFromBook = _wordsFromBook;
-		m_indexWordsShown = m_wordsFromBook.size() - 1;
+		m_indexWordsShown = m_wordsFromBook.size() ;
 	}
 
 
@@ -201,10 +209,12 @@ public class CoreDictionary {
 	}
 
 	/**
-	 * @param m_typeOrder the m_typeOrder to set
+	 * @param _typeOrder the m_typeOrder to set
+	 * @param position : the index associated with the order prefered 
 	 */
-	public void setM_typeOrder(String m_typeOrder) {
-		this.m_typeOrder = m_typeOrder;
+	public void setM_typeOrder(String _typeOrder, int position) {
+		m_typeOrder = _typeOrder;
+		m_indexOrderShown = position;
 	}
 
 	/**
@@ -249,6 +259,20 @@ public class CoreDictionary {
 		m_interface.update();
 		
 		
+	}
+
+	/**
+	 * @return the m_indexOrderShown
+	 */
+	public int getM_indexOrderShown() {
+		return m_indexOrderShown;
+	}
+
+	/**
+	 * @param m_indexOrderShown the m_indexOrderShown to set
+	 */
+	public void setM_indexOrderShown(int _indexOrderShown) {
+		m_indexOrderShown = _indexOrderShown;
 	}
 
 

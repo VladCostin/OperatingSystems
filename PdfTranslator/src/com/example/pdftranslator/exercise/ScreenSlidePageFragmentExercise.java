@@ -8,9 +8,12 @@ import android.app.Fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -21,7 +24,7 @@ import android.widget.TextView;
  * <p>This class is used by the {@link CardFlipActivity} and {@link
  * ScreenSlideActivity} samples.</p>
  */
-public class ScreenSlidePageFragmentExercise extends Fragment {
+public class ScreenSlidePageFragmentExercise extends Fragment implements OnClickListener {
     /**
      * The argument key for the page number this fragment represents.
      */
@@ -39,7 +42,18 @@ public class ScreenSlidePageFragmentExercise extends Fragment {
     static String m_editTextValue;
     
     /**
+     * the text view where the answer Wrong or Right will be shown
+     */
+     TextView m_textViewAnswerApp;
+     
+     
+     String valueCorrect;
+    
+    /**
      * Factory method for this fragment class. Constructs a new fragment for the given page number.
+     * @param pageNumber : the page to be instantiated
+     * @param m_controller : the controller that listenes for the events
+     * @return : the new fragment
      */
     public static ScreenSlidePageFragmentExercise create(int pageNumber) {
         ScreenSlidePageFragmentExercise fragment = new ScreenSlidePageFragmentExercise();
@@ -63,21 +77,20 @@ public class ScreenSlidePageFragmentExercise extends Fragment {
         // Inflate the layout containing a title and body text.
         ViewGroup rootView = (ViewGroup) inflater
                 .inflate(R.layout.fragment_screen_slide_page_exercise, container, false);
-        Word word = ExerciseController.getWordAtPosition(mPageNumber);
+        Word word = ExerciseModel.getWordAtPosition(mPageNumber);
         
         ((TextView) rootView.findViewById(R.id.CellWordValue)).setText(word.getValue());
         ((TextView) rootView.findViewById(R.id.CelllDefinitionValue)).setText(word.getDefinition());
         ((TextView) rootView.findViewById(R.id.CelllExampleValue)).setText(word.getExample());
         ((TextView) rootView.findViewById(R.id.CelllParthSpeechValue)).setText(word.getPart());
+        Log.i("message", "Translation" + word.getTranslation());
         
         EditText m_editText = (EditText)  rootView.findViewById(R.id.CellAnswer);
-        m_editText.setText("   fututi mortii matti  " + mPageNumber + " ----  ");  
-        
+        valueCorrect = word.getTranslation();
         
         m_editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-            	
             	
             }
 
@@ -94,6 +107,12 @@ public class ScreenSlidePageFragmentExercise extends Fragment {
             }
         });
         
+        
+        Button m_button = (Button)  rootView.findViewById(R.id.ExerciseCellButtonCheck);
+        //m_button.setOnClickListener(ExerciseSlider.m_controller);
+        m_button.setOnClickListener(this);
+        
+        m_textViewAnswerApp = (TextView) rootView.findViewById(R.id.CellCheck);
       
         return rootView;
     }
@@ -104,6 +123,35 @@ public class ScreenSlidePageFragmentExercise extends Fragment {
     public int getPageNumber() {
         return mPageNumber;
     }
+    
+    /*
+    public static void update()
+    {
+    }
+	*/
+
+	@Override
+	public void onClick(View v) {
+		
+		
+	//	 boolean valueCheck = //ExerciseSlider.m_model.checksValue(m_editTextValue );
+		 if(valueCorrect.equals(m_editTextValue))
+		 {
+			 m_textViewAnswerApp.setText(Constants.message_right);
+			 m_textViewAnswerApp.setTextColor(getResources().getColor( R.color.green));
+			 ExerciseModel.addIfCorrect(mPageNumber);
+		 }
+		 else
+		 {
+			 m_textViewAnswerApp.setText(Constants.message_wrong);
+			 m_textViewAnswerApp.setTextColor(getResources().getColor( R.color.red));
+		 }
+		 
+
+		
+	}
+	
+
 }
 
 

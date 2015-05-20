@@ -155,20 +155,21 @@ public class ScreenSlidePageFragment extends Fragment implements OnTouchListener
 	    return values;
 	}
     
+	
 	@Override
 	public boolean onTouch(View v, MotionEvent event) {
 		
 		Log.i("message", ActivityTextDisplayer.isBooleanSearchNewWord() + " ");
 		ViewParent parent = ((TextView) v).getParent(); 
-		parent.requestDisallowInterceptTouchEvent(true);
+	//	parent.requestDisallowInterceptTouchEvent(true);
 		
 		switch (event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
 				
-				if(ActivityTextDisplayer.isBooleanSearchNewWord() == false)
-					return false;
+			//	if(ActivityTextDisplayer.isBooleanSearchNewWord() == false)
+			//		return false;
 			
-				ActivityTextDisplayer.setBooleanSearchNewWord(false);
+			//	ActivityTextDisplayer.setBooleanSearchNewWord(false);
 				determineWordSelected(v, event);
 				break;
 
@@ -180,7 +181,6 @@ public class ScreenSlidePageFragment extends Fragment implements OnTouchListener
 
 		return true;
 	}
-	
 
     /**
      * @param v : the TEXTVIEW touched
@@ -213,7 +213,7 @@ public class ScreenSlidePageFragment extends Fragment implements OnTouchListener
    	    	   return;
    	        }
    	        
-   	        
+   	      
    	        
    	        while(true)
    	        {
@@ -232,16 +232,17 @@ public class ScreenSlidePageFragment extends Fragment implements OnTouchListener
    	        	copy_offset++;
    	        	if(ActivityTextDisplayer.letter_index.get(copy_offset ).equals(" ") || 
    	        	   ActivityTextDisplayer.letter_index.get(copy_offset ).equals("\n") || 
-   	        	   ActivityTextDisplayer.letter_index.get(copy_offset ).equals("."))
+   	        	   ActivityTextDisplayer.letter_index.get(copy_offset ).equals(".") ||
+   	        	   ActivityTextDisplayer.letter_index.get(copy_offset ).equals(",")
+   	        	   )
    	        		break;
    	        	word =  word + ActivityTextDisplayer.letter_index.get(copy_offset);
    	        }
    	       
-   	       String params[] = {word,Language.ENGLISH.toString(), Language.ROMANIAN.toString()};
-   	        
-   	    new InternetConnection(getActivity()).execute(params);
-   	       // new InternetConnection(getActivity()).execute(params);
-   	        Log.i("NAME", ""+offset + " " + line + " ------" + ActivityTextDisplayer.letter_index.get(offset ) + "-----   -----" + word + "------"); 
+   	       
+   	    ActivityTextDisplayer.m_item_Translate.setTitle("Translate " + word.substring(0, Math.min(20, word.length())));
+   	       
+   	  //      Log.i("NAME", ""+offset + " " + line + " ------" + ActivityTextDisplayer.letter_index.get(offset ) + "-----   -----" + word + "------"); 
    	    }
 		
 	}

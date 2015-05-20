@@ -9,9 +9,11 @@ import com.example.pdftranslator.dictionary.ActivityDictionary;
 import com.example.pdftranslator.dictionary.ConstantsTabs;
 import com.itextpdf.text.pdf.PdfReader;
 import com.itextpdf.text.pdf.parser.PdfTextExtractor;
+import com.memetix.mst.language.Language;
 
 import Database.AttributesBook;
 import Database.Book;
+import InternetConnection.InternetConnection;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NavUtils;
@@ -21,11 +23,18 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 
@@ -53,7 +62,7 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
      * The pager widget, which handles animation and allows swiping horizontally to access previous
      * and next wizard steps.
      */
-    static MyViewPager mPager;
+    static ViewPager mPager;
 
     /**
      * The pager adapter, which provides the pages to the view pager widget.
@@ -101,7 +110,19 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
      */
     String m_fileName;
     
-    Integer page;
+    /**
+     * the current page to be shown
+     */
+    Integer m_page;
+    
+    
+    /**
+     * item where it is specified the word selected and
+     * if pushed, to translate the word
+     */
+    static MenuItem m_item_Translate;
+    
+    static MenuItem m_item_IdPage;
 	
 	/**
 	 * the map index-letter for the next page
@@ -114,6 +135,8 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
 	 */
 //	static LinkedHashMap<Integer, String>	letter_index_before;
 	
+    public ProgressDialog progress;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +151,8 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
         initTextFromPdf();
         initViewPager();
         addBookIfIdDoesNotExist();
-        
+        progress = new ProgressDialog(this);
+       
 
     }
 
@@ -141,8 +165,8 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
 		
 		String filePath = getIntent().getStringExtra(Constants.nameExtraStarttextDisplayer);
 		String fileName = getIntent().getStringExtra(Constants.nameFile);
-		page = getIntent().getIntExtra(Constants.pageSaved, 0); 
-		Log.i("message","getDataFromActivites :  " + filePath + " " + fileName + " " + page);
+		m_page = getIntent().getIntExtra(Constants.pageSaved, 0); 
+		Log.i("message","getDataFromActivites :  " + filePath + " " + fileName + " " + m_page);
 		initReader(filePath,fileName, 0);
       
 		
@@ -218,8 +242,9 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
         
         sliderJumpToPage = (SeekBar) findViewById(R.id.sliderPdfBook);
 		sliderJumpToPage.setMax(NUM_PAGES);
-		sliderJumpToPage.setProgress(page);
+		sliderJumpToPage.setProgress(m_page);
 		sliderJumpToPage.setOnSeekBarChangeListener(this);
+		
     }
     
     /**
@@ -228,7 +253,7 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
     public void initViewPager()
     {
         // Instantiate a ViewPager and a PagerAdapter.
-        mPager = (MyViewPager) findViewById(R.id.pager);
+        mPager = (ViewPager) findViewById(R.id.pagerViewBook); 
         mPagerAdapter = new ScreenSlidePagerAdapter(getFragmentManager());
         mPager.setAdapter(mPagerAdapter);
     	
@@ -264,7 +289,7 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
         });
 
         
-		mPager.setCurrentItem(page);
+		mPager.setCurrentItem(m_page);
     }
     
     
@@ -295,7 +320,10 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
         super.onCreateOptionsMenu(menu);
         getMenuInflater().inflate(R.menu.activity_screen_slide, menu);
 
-        menu.findItem(R.id.action_previous).setEnabled(mPager.getCurrentItem() > 0);
+        m_item_Translate = menu.findItem(R.id.itemTranslate);
+        m_item_IdPage = menu.findItem(R.id.itemPageIndex);
+        
+        m_item_IdPage.setTitle(Integer.toString(m_page));
 
         // Add either a "next" or "finish" button to the action bar, depending on which page
         // is currently selected.
@@ -313,6 +341,7 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+    	int newPage;
         switch (item.getItemId()) {
             case android.R.id.home:
                 // Navigate "up" the demo structure to the launchpad activity.
@@ -323,23 +352,83 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
             case R.id.action_previous:
                 // Go to the previous step in the wizard. If there is no previous step,
                 // setCurrentItem will do nothing.
+            	m_item_IdPage.setTitle("30");
                 mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+                m_item_IdPage.setTitle("30");
+             //   m_item_IdPage.setTitle( Integer.toString( mPager.getCurrentItem() - 1) );
                 return true;
 
             case R.id.action_next:
                 // Advance to the next step in the wizard. If there is no next step, setCurrentItem
                 // will do nothing.
+            	  m_item_IdPage.setTitle("30");
                 mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+                m_item_IdPage.setTitle("30");
                 return true;
             case R.id.itemGoToDictionary:
             	Intent intent = new Intent(this, ActivityDictionary.class);
             	intent.putExtra(ConstantsTabs.titleBook, this.m_book.getTitle());
             	this.startActivity(intent);
+            case R.id.itemTranslate:
+            	handleTranslateAction();
         }
 
         
         
         return super.onOptionsItemSelected(item);
+    }
+    
+    
+    /**
+     * handles the translation action, if it is possible
+     * another one might be already  handled
+     */
+    public void handleTranslateAction()
+    {
+    	 if( isNetworkAvailable() == false)
+    	 {
+    		 showMessageNoConnection();
+    		 return;
+    	 }
+
+    	
+    	 String word = m_item_Translate.getTitle().toString().replace("Translate ", "");
+    	 String params[] = {word,Language.ENGLISH.toString(), Language.ROMANIAN.toString()};
+    	 
+    	 progress.setMessage(word + " is being translated ");
+         progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+         progress.setIndeterminate(true);
+         progress.show();
+    	 
+    	 new InternetConnection(this).execute(params);
+    }
+    
+    /**
+     * check if there is connection available
+     * if not, mention that to the user
+     */
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager 
+              = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+    
+    public void showMessageNoConnection()
+    {
+    	 AlertDialog.Builder builder;
+    	 builder = new AlertDialog.Builder(this);
+         builder.setMessage("Please check your internet connection");
+         builder.create().show();
+    }
+    
+    /*
+     * one the user closes the dialog and comes back tor eading the file, it can choose words again
+     */
+    public void onResume()
+    {
+    	Log.i("message", "revine in resume");
+    	super.onResume();
     }
     
 	
@@ -364,6 +453,7 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
 
         @Override
         public Fragment getItem(int position) {
+        	Log.i("message", "Pozitia aleasa" + position);
             return ScreenSlidePageFragment.create(position);
         }
         
@@ -392,7 +482,15 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
 
 	@Override
 	public void onStopTrackingTouch(SeekBar seekBar) {
-		mPager.setCurrentItem(seekBar.getProgress(), false);
+		
+		int newPage = seekBar.getProgress();
+		
+		mPager.setCurrentItem( newPage, false);
+		m_item_IdPage.setTitle("30");
+		
+		
+		
+		
 	}
 
 
@@ -430,6 +528,7 @@ public class ActivityTextDisplayer extends FragmentActivity implements OnSeekBar
 	public static void setBook(Book book) {
 		ActivityTextDisplayer.m_book = book;
 	}
+
 	
 }
 

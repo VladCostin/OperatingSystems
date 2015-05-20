@@ -23,12 +23,12 @@ public class MyViewPager extends ViewPager
 	public MyViewPager(Context context) {
 
 		super(context);
-		toScroll = false;
+		toScroll = true;
 		// TODO Auto-generated constructor stub
 	}
 	
 	public MyViewPager(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		toScroll = false;
+		toScroll = true;
 	}
 }

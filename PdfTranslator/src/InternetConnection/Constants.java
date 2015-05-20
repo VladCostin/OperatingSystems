@@ -11,6 +11,8 @@ public interface Constants {
     String builderResultBing			= "Bing rezult: ";
     
     
-    String builderPositiveResponse		= "Ok";
+    String builderPositiveResponse		= "Save";
+    
+    String buildernegativeResponse		= "Don't save";
 
 }

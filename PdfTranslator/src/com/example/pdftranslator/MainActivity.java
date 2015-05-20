@@ -79,7 +79,6 @@ public class MainActivity extends Activity implements OnClickListener, OnItemCli
 	Button m_buttonShowExerciseActivity;
 	
 	
-	
 	/**
 	 *  represents the path to the file to be read
 	 */

@@ -9,7 +9,7 @@ import Database.Word;
  * @author Vlad Herescu
  *
  */
-public interface ExerciseControllerInterface {
+public interface ExerciseModelInterface {
 
 	/**
 	 * gets the words to be exercised from database

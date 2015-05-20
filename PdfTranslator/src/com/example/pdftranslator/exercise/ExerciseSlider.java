@@ -2,9 +2,16 @@ package com.example.pdftranslator.exercise;
 
 import com.example.pdftranslator.R;
 
+
+
+
+
+
+
+import InternetConnection.Constants;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v13.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentActivity;
@@ -15,7 +22,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.TextView;
 
 /**
@@ -23,7 +29,7 @@ import android.widget.TextView;
  * @author Vlad Herescu
  *
  */
-public class ExerciseSlider extends   FragmentActivity {
+public class ExerciseSlider extends   FragmentActivity  {
 	
 	
     /**
@@ -44,9 +50,14 @@ public class ExerciseSlider extends   FragmentActivity {
     
     /**
      * class which contains the data to be shown, and manages the queries
+     * executes the business logic
      */
-    ExerciseController	m_controller;
+    static ExerciseModel	m_model;
     
+    /**
+     * listens to user input and notifies the model
+     */
+    static ExerciseController m_controller; 
     
     
 
@@ -59,6 +70,7 @@ public class ExerciseSlider extends   FragmentActivity {
         mPager = (ViewPager) findViewById(R.id.pagerExercise);
         mPagerAdapter = new ScreenSlidePagerAdapter(getFragmentManager());
         mPager.setAdapter(mPagerAdapter);
+        mPager.setCurrentItem(0);
         mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -70,14 +82,17 @@ public class ExerciseSlider extends   FragmentActivity {
             }
         });
         
-        m_controller = new ExerciseController();
-        m_controller.retrieveWords(10);
+        
+        m_model = new ExerciseModel();
+        m_model.retrieveWords(10);
+        
+        m_controller = new ExerciseController(m_model);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        getMenuInflater().inflate(R.menu.activity_screen_slide, menu);
+        getMenuInflater().inflate(R.menu.android_exercise_actionbar, menu);
 
         menu.findItem(R.id.action_previous).setEnabled(mPager.getCurrentItem() > 0);
 
@@ -103,33 +118,51 @@ public class ExerciseSlider extends   FragmentActivity {
                 return true;
 
             case R.id.action_next:
-                // Advance to the next step in the wizard. If there is no next step, setCurrentItem
-                // will do nothing.
+                
+            	handleMenuItemNext(item.getTitle().toString().toLowerCase());
             	
-            	String valueWrittenByUser = getValueWrittenByUser();
-            	boolean valueResult = m_controller.checksValue( valueWrittenByUser);
-            	
-                if(valueResult == true)	
-                	mPager.setCurrentItem(mPager.getCurrentItem() + 1);
-                	
                 return true;
+                
         }
 
         return super.onOptionsItemSelected(item);
     }
-
+    
     /**
-     * gets the value written by the user
-     * @return : returns the value translated by the user
+     * @param _itemValue : the value of the button with the id next
+     * 
      */
-    public String getValueWrittenByUser() {
-		
-    	
-    	
-    	Log.i("message", ScreenSlidePageFragmentExercise.m_editTextValue);
-    	
-		return ScreenSlidePageFragmentExercise.m_editTextValue;
-	}
+    public void handleMenuItemNext(String _itemValue)
+    {
+    	if(_itemValue.equals("next"))
+    		mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+    	if(_itemValue.equals("finish"))
+    	{
+    		
+    	  	
+    	   	AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    	   	TextView textViewScore;
+    	    LayoutInflater inflater = 	getLayoutInflater();
+    	    final View tableLayout = inflater.inflate(R.layout.dialog_score_shown, null); // first you have to inflate
+    	    
+
+    	   	
+    	   	builder.setView(tableLayout);
+    	   	
+    	   	textViewScore = (TextView) tableLayout.findViewById( R.id.textViewScoreValueExerciseActivity);
+    	   	if(textViewScore == null)
+    	   		Log.i("message", "este null");
+    	   	else
+    	   		textViewScore.setText(ExerciseModel.m_indexWordsCorrect.size()+"/" + NUM_PAGES  );
+    		
+    	   	builder.create().show();
+    	   	
+    	   	
+    	   	
+    	}
+    }
+    
+
 
 	/**
      * A simple pager adapter that represents 5 {@link ScreenSlidePageFragment} objects, in
@@ -144,6 +177,7 @@ public class ExerciseSlider extends   FragmentActivity {
         // aici apeleaza noul fragment
         @Override
         public Fragment getItem(int position) {
+        	Log.i("message", "getItem" + position);
             return ScreenSlidePageFragmentExercise.create(position);
         }
 
@@ -152,4 +186,6 @@ public class ExerciseSlider extends   FragmentActivity {
             return NUM_PAGES;
         }
     }
+
+
 }

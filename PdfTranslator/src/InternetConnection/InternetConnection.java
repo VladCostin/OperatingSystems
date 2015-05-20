@@ -31,25 +31,40 @@ import Database.Word;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 public class InternetConnection extends AsyncTask<String, Void, Word> {
 	
-	Activity displayer;
+	ActivityTextDisplayer displayer;
 	
-	public InternetConnection(Activity activity)
+    private ProgressDialog progress;
+	
+	
+	public InternetConnection(ActivityTextDisplayer activity)
 	{
 		  BingTranslator.setIds();
 		  this.displayer = activity;
+		  progress = new ProgressDialog(displayer);
 	}
 
 	@Override
 	protected Word doInBackground(String... params) {
+		
+		/*
+		progress.setMessage("Downloading Music :) ");
+	    progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+	    progress.setIndeterminate(true);
+	    progress.show();
+		
+		*/
 		 WordApi api = new WordApi();
 		 Log.i("message", params[0]);
 	     api.addHeader("api_key", "938e5765b6eb9c0d2a20007483900cf7b48a83d09b9d32ee8");
@@ -64,7 +79,11 @@ public class InternetConnection extends AsyncTask<String, Void, Word> {
 	     word.setExample("example1");
 	     word.setPart(PartSpeech.VERB.toString());
 	     
-	    /* try {
+	     
+	     Log.i("message", PartSpeech.VERB.toString() + "--  --" + PartSpeech.NOUN.toString() + "-- --" + PartSpeech.ADJECTIVE.toString() + "-- --" + PartSpeech.ADVERB.toString());
+	     
+	     Log.i("message", "datele primite : " + params[0] + " " + params[1] + " " + params[2]);
+	     try {
 	    	
 	    	 definitions = api.getDefinitions(params[0], null, null, null, null, null, null);
 	    	 exampleResult = api.getExamples(params[0], null, null, null, null);
@@ -72,27 +91,53 @@ public class InternetConnection extends AsyncTask<String, Void, Word> {
 	    	 if(definitions.size() != 0)
 	    	 {
 	    		 word.setDefinition(definitions.get(0).getText());
-	    		 word.setPart(definitions.get(0).getPartOfSpeech());
+	    		 word.setPart(definitions.get(0).getPartOfSpeech().toUpperCase());
+	    		 Log.i("message", "Part este --" + word.getPart() + "--");
 	    	 }
 	    	 if(exampleResult.getExamples().size() != 0)
 	    		word.setExample( exampleResult.getExamples().get(0).getText());
 	    	 
-	    	 word.setTranslation("cucu"); 
+	    	 word.setTranslation(getBingTranslation(params)); 
 	    	 word.setValue(params[0]);
+	    	 
+	    	 
 	    	 
 		} catch (ApiException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}*/
+		}
 	    	 
 	     return word;
 	     
 	     
 	}
 	
+	
+	public String getBingTranslation(String... params)
+	{
+		Log.i("NAME", params[0]);
+		Log.i("NAME", params[1]);
+		Log.i("NAME", params[2]);
+		Language lan1 = Language.fromString(params[1]);
+		Language lan2 = Language.fromString(params[2]);
+
+		return BingTranslator.translateFromBing(params[0], lan1, lan2);
+	}
+	
 	 protected void onPostExecute(Word word) {
-		 createDialogWithWordTranslated(word).show();
-		 saveDataIntoDictionary(word);
+		 
+		 Dialog builder = createDialogWithWordTranslated(word);
+		 
+		/* WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+		 lp.copyFrom(displayer.getWindow().getAttributes());
+		 lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+		 lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+		 builder.getWindow().setAttributes(lp);
+		 */
+		 builder.show();
+		 displayer.progress.cancel();
+
+		 
      }
 	 
 	 /**
@@ -111,7 +156,7 @@ public class InternetConnection extends AsyncTask<String, Void, Word> {
 			 iWord = MainActivity.m_database.getWordId(word.getValue());
 		 }
 		 
-		 
+		 Log.i("message", "Part este --" + word.getPart() + "--"); 
 		
 		 MainActivity.m_database.addAppeareance(
 				 new Appeareance(ActivityTextDisplayer.getBook().getId(), iWord,  ActivityTextDisplayer.getSliderJumpToPage().getProgress()));
@@ -152,20 +197,41 @@ public class InternetConnection extends AsyncTask<String, Void, Word> {
 	   	textViewDefinition.setText(rezult.getDefinition());
 	   	textViewPart.setText(rezult.getPart());
 	   	textViewExample.setText(rezult.getExample());
+	   	
+	   	
 
-
+	    saveDataIntoDictionary(rezult);
+		
 	   	
 	   	builder.setPositiveButton(Constants.builderPositiveResponse, new  DialogInterface.OnClickListener(){
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				// save data into
-				ActivityTextDisplayer.setBooleanSearchNewWord(true); 
+				
+				
 					
 			}
 	    		
 	    });
+	   	
+	   	
+	   	builder.setNegativeButton(Constants.buildernegativeResponse, new  DialogInterface.OnClickListener(){
 
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// save data into
+		//		ActivityTextDisplayer.setBooleanSearchNewWord(true); 
+					
+			}
+	    		
+	    });
+	   	
+	   	
+
+
+	   
+	    
+	   	ActivityTextDisplayer.setBooleanSearchNewWord(true); 
 	    return builder.create();
 
 	}

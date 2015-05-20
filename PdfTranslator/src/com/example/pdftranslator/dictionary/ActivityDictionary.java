@@ -198,8 +198,11 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 	{
 
 		ArrayList<Word> words = MainActivity.m_database.getAllWords(); 		
+		
+		
+		
 		m_core.setM_wordsFromBook(words); 
-		Log.i("message", "Size este : " + m_hashMapWords.get(PartSpeech.VERB));
+		Log.i("message", "Size-ul databaselului este este : " + words.size());
 		
 	}
 	
@@ -282,14 +285,6 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 		// Inflate the menu; this adds items to the action bar if it is present.
 		m_menu = menu;
 		getMenuInflater().inflate(R.menu.activity_dictionary, menu);
-
-		
-		/** Get the action view of the menu item whose id is search */
-        View v = (View) menu.findItem(R.id.itemNextNPages).getActionView();
- 
-        /** Get the edit text from the action view */
-      //  EditText txtSearch = ( EditText ) v.findViewById(R.id.editTextGoToPage);
-	//	txtSearch.setText(ConstantsTabs.m_WordsShownStart);
 		 
 		return true;
 	}
@@ -346,14 +341,17 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 		final List<String> options = new ArrayList<String>();
 		
 		
-		options.add(ConstantsTabs.orderAlph);
+
 		options.add(ConstantsTabs.orderId);
+		options.add(ConstantsTabs.orderAlph);
 		adapter = new ArrayAdapter<String>(this, android.R.layout.select_dialog_singlechoice, options);
+		
 		
 		
 		ListView list = (ListView) body.findViewById(R.id.listviewDialogOpenStartedBooks); 		
 		list.setAdapter(adapter);
 		list.setOnItemClickListener(m_controller);
+		list.setItemChecked(m_core.getM_indexOrderShown(), true);
 
 		
 		
@@ -384,14 +382,13 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 		
 		
 		final CustomDialog customDialog = new CustomDialog(this, R.color.orange);
-		/*LayoutInflater inflater = this.getLayoutInflater();
-		final List<Book> books = MainActivity.database.getAllBooks();
+		LayoutInflater inflater = this.getLayoutInflater();
+		final List<Book> books = MainActivity.m_database.getAllBooks();
 		final List<String> titles = new ArrayList<String>();
-		View body = inflater.inflate(R.layout.dialog_select_book_dictionary, null);
-		final Spinner spinnerBooks; 
-		//View body = inflater.inflate(R.layout.dialog_select_book_dictionary_list, null);
+		View body = inflater.inflate(R.layout.dialog_select_book_dictionary_list, null);
+
 		ListView list;
-		ArrayAdapter adapter;
+		ArrayAdapter<String> adapter;
 		
 		
 		for(Book book : books)
@@ -404,15 +401,11 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 		customDialog.setView(body);
 
 		adapter = new ArrayAdapter<>(this, R.layout.spinner_layout_text_center, titles);
-		spinnerBooks = (Spinner) body.findViewById(R.id.spinnerBooksDialog);
-		spinnerBooks.setAdapter(adapter);
+		list = (ListView) body.findViewById(R.id.listviewDialogOpenStartedBooks);
+		list.setAdapter(adapter);
 		
-		//list = (ListView) body.findViewById(R.id.listview);
-		//list.setAdapter(adapter);
 		
-		customDialog.setButton(DialogInterface.BUTTON_POSITIVE,getResources().getString
-				(R.string.dialogSelectBookButtonPositive), new OpenDictionaryDialogInterface(this,books,spinnerBooks));
-		
+		customDialog.setView(body);
 		
 		
 		customDialog.setButton(DialogInterface.BUTTON_NEUTRAL, getResources().getString
@@ -421,13 +414,15 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				
-				
+				// added a Cancel button
+				// if the user pushes it, nothing happens
+				// it just exists the dialog
 					
 				
 			}
 		});
 		
-		*/
+		
 		return customDialog;
 		
 		
@@ -511,112 +506,5 @@ public class ActivityDictionary extends Activity implements ActionBar.TabListene
 	public int getCount() {
 		return ConstantsTabs.NUMBER_TABS;
 	}
-	
-	//when you call notifyDataSetChanged(), the view pager will remove all views and reload them all. As so the reload effect is obtained.
-//	public int getItemPosition(Object object) {
-//	    return POSITION_NONE;
-//	}
-
-	/*
-    public Object instantiateItem (ViewGroup container, int position)
-	{
-		 Log.i("message", "sunt in instatiateItem " + position + " " + container.toString());
-
-		 Log.i("message", ActivityDictionary.hashMapFragments.keySet().toString());
-		if(!ActivityDictionary.hashMapFragments.containsKey(position+ 1))
-		{
-			
-			
-	
-			ActivityDictionary.hashMapFragments.put(position+ 1, container);
-			container.setTag(ActivityDictionary.hashMapTypeWordAssociatedToFragment.get(position + 1).partSpeech);
-		}
-		 
-		 return super.instantiateItem(container, position);
-	}
-	*/
-	
-/*	@Override
-	public Object instantiateItem(ViewGroup container, int position) {
-	    
-	//	LayoutInflater li = (LayoutInflater) activity.getSystemService(activity.LAYOUT_INFLATER_SERVICE);
-	//	View root = li.inflate(R.layout.fragment_tab_part_speech, null);
-		
-	/*	
-	    ((ViewPager) container).addView(root);
-	    ActivityDictionary.hashMapFragments.put(position+ 1, root);
-	    
-		Log.i("message","sunt aici" + ActivityDictionary.hashMapFragments.keySet().toString());
-		
-	    DictionaryFragment fragment = (DictionaryFragment) super.instantiateItem(container, position);
-	    if(fragment.view == null)
-	    	Log.i("message", "este null");
-	    
-	    ActivityDictionary.hashMapFragments.put(position, fragment);
-	    return fragment;
-	}
-*/	
-/*
-	@Override
-	public void destroyItem(View collection, int position, Object o) {
-	    View view = (View)o;
-	    ((ViewPager) collection).removeView(view);
-	    ActivityDictionary.hashMapFragments.remove(position);
-	    view = null;
-	}
-  */  
- /*   public void notifyDataSetChanged()
-    {
-    	/*View v = activity.viewPager.findViewWithTag(PartSpeech.VERB.toString());
-    	ListView list = (ListView) v.findViewById(R.id.listViewWords);
-    	if(list == null)
-    		Log.i("message", "cucu");
-    	
-    
-
-    	
-    	Log.i("message", ActivityDictionary.hashMapFragments.toString());
-   // 	Log.i("message", ActivityDictionary.getHashMapTypeWordAssociatedToFragment().toString());
-    	Log.i("message", ActivityDictionary.hashMapWords.toString());
-    	
-    	View view = ActivityDictionary.hashMapFragments.get(1).view;
-    	if(view == null)
-    		Log.i("message", "ESTE NUUUUL");
-    	else
-    		Log.i("message", "NU MAI ESTE NULL");
-    //	Log.i("message", view.toString());
-    	    	
-    	 ListView list = (ListView) view.findViewById(R.id.listViewWords);
-    	 if(list == null)
-    		 Log.i("message", "este null");
-    	 
- 		ItemAdapter adapter = new ItemAdapter(activity, R.layout.item_listview_word,
-				ActivityDictionary.hashMapWords.get(PartSpeech.VERB),ActivityDictionary.getHashMapTypeWordAssociatedToFragment().get(1) );
- 		if(adapter ==null)
- 			Log.i("message", "adaptrul este null");
-
-		list.setAdapter(adapter);
-   /* 	
-    	for(Integer key :  ActivityDictionary.hashMapFragments.keySet())
-    	{
-    		Log.i("message", key + " ");
-    		View view = ActivityDictionary.hashMapFragments.get(key);	
-    		
-    		
-    		PartSpeech part = ActivityDictionary.getHashMapTypeWordAssociatedToFragment().
-    				get(  key).partSpeech;
-    		ListView list = (ListView) view.findViewById(R.id.listViewWords);
-    		
-    		
-    		ItemAdapter adapter = new ItemAdapter(activity, R.layout.item_listview_word,
-    				ActivityDictionary.hashMapWords.get(part),ActivityDictionary.getHashMapTypeWordAssociatedToFragment().get(key) );
-
-    		list.setAdapter(adapter);
-    	}
-    	
-    	super.notifyDataSetChanged();
-    }
-	*/
-
 	
 }
