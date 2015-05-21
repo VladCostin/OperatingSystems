@@ -1,77 +1,36 @@
 package com.example.pdftranslator.exercise;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import android.util.Log;
-
-import com.example.pdftranslator.MainActivity;
-
-import Database.Word;
+import android.view.View;
+import android.view.View.OnClickListener;
 
 /**
- * 
- * class that deals with data managing retrieved from database, that checks values, etc 
+ * implements the listeners and notifies the controller
  * @author Vlad Herescu
  *
  */
-public class ExerciseController implements ExerciseControllerInterface{
+public class ExerciseController implements OnClickListener {
 
 	/**
-	 * the words to be tested by the user
+	 * the model that will take care of the action performed by the user
 	 */
-	static ArrayList<Word> m_words;
+	ExerciseModel m_model;
 	
 	
 	/**
-	 * the word to be checked by the application
+	 * @param _model : the model which will execute the function for the 
+	 * <br> action performed
 	 */
-	static Word m_currentWordChecked;
+	public ExerciseController(ExerciseModel _model) {
 	
-	/**
-	 * initializing the data
-	 */
-	public ExerciseController() {
-		m_words = new ArrayList<Word>();
-	}
-	
-	
-	@Override
-	public void retrieveWords(int _wordsLength) {
-		
-		List<Word> words = MainActivity.m_database.getAllWords();
-		m_words.clear();
-		
-		
-		for(int i = words.size() - _wordsLength; i < words.size(); i++)
-			m_words.add(words.get(i));
-
+		m_model = _model;
 	}
 
 	@Override
-	public boolean checksValue( String _valueFromUser) {
+	public void onClick(View v) {
 		
-		Log.i("message", m_currentWordChecked.getTranslation());
+		String valueFromUser = ScreenSlidePageFragmentExercise.m_editTextValue;
 		
-		if(m_currentWordChecked.getTranslation().equals(_valueFromUser))
-			return true;
 		
-		return false;
-	}
-	
-	/**
-	 * get a word to be tested
-	 * @param _position : the ndex associated with the word to be tested
-	 * @return : the word to be tested
-	 */
-	public static Word getWordAtPosition(int _position)
-	{
-		
-		m_currentWordChecked = m_words.get(_position);
-		return m_words.get(_position);
 	}
 
-	
-	
-	
 }
